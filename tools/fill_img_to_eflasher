@@ -1,0 +1,138 @@
+#!/bin/bash
+
+# set -eu
+
+# ----------------------------------------------------------
+# base setup
+
+TOPPATH=$PWD
+
+EFLASHER_RAW_IMG=$1
+SOC=$2
+TARGET_OS=$3
+
+OS_IMAGES_DIR=${TOPPATH}/${TARGET_OS}
+
+[ -z ${EFLASHER_RAW_IMG} -o -z ${SOC} -o -z ${TARGET_OS} ] && {
+        echo "Usage: $0 <image name> <plat>"
+        exit 1
+}
+
+[ -f ${EFLASHER_RAW_IMG} ] || {
+	echo "Error: ${EFLASHER_RAW_IMG} not found"
+	exit 1
+}
+
+[ -f ${TOPPATH}/mk-emmc-image.sh ] || {
+	echo "Error: please run at the script's home dir"
+	exit 1
+}
+
+[ -d ${OS_IMAGES_DIR} ] || {
+        echo "Error: not found ${OS_IMAGES_DIR}"
+        exit 1
+}
+
+if [ $# -eq 4 ]; then
+	RAW_FILE=$4
+else
+	case ${TARGET_OS} in
+	buildroot)
+	        RAW_FILE=${SOC}-eflasher-buildroot-linux-5.10-arm64-$(date +%Y%m%d).img ;;
+	friendlycore-focal-arm64)
+	        RAW_FILE=${SOC}-eflasher-friendlycore-lite-focal-5.10-arm64-$(date +%Y%m%d).img ;;
+	debian-buster-desktop-arm64)
+	        RAW_FILE=${SOC}-eflasher-debian-buster-desktop-5.10-arm64-$(date +%Y%m%d).img ;;
+	friendlywrt22)
+	        RAW_FILE=${SOC}-eflasher-friendlywrt-22.03-$(date +%Y%m%d).img ;;
+	friendlywrt22-docker)
+	        RAW_FILE=${SOC}-eflasher-friendlywrt-22.03-docker-$(date +%Y%m%d).img ;;
+	friendlywrt21)
+	        RAW_FILE=${SOC}-eflasher-friendlywrt-21.02-$(date +%Y%m%d).img ;;
+	friendlywrt21-docker)
+	        RAW_FILE=${SOC}-eflasher-friendlywrt-21.02-docker-$(date +%Y%m%d).img ;;
+	*)
+	        RAW_FILE=${SOC}-eflasher-${TARGET_OS}-$(date +%Y%m%d).img ;;
+	esac
+fi
+
+AUTOSTART=no
+Args=( "$@" )
+# skip arg1,arg2,arg3
+for (( i=3; i<${#Args[@]}; i++ ));
+do
+    if [ "x${Args[$i]}" = x"autostart=yes" ]; then
+        AUTOSTART=yes
+    elif [ "x${Args[$i]}" = x"autostart=y" ]; then
+        AUTOSTART=yes
+    elif [[ ! -z $(echo ${Args[$i]} | grep "filename=") ]]; then
+        RAW_FILE=${Args[$i]:9}
+    fi
+done
+
+gen_eflasher_conf()
+{
+    local AutoFlashOSName=
+    if [ ${3} = "yes" ]; then
+        AutoFlashOSName=${2}
+    fi
+	OSNamesMergeWithComma="buildroot,friendlywr21,friendlywr22,friendlycore-focal-arm64,debian-buster-desktop-arm64"
+	cat > ${1}/eflasher.conf <<EOL
+; This is the eFlasher configuration file.
+; See http://wiki.friendlyarm.com/wiki/index.php/EFlasher for detailed information.
+
+[General]
+; Automate OS installation at system startup,
+; The "autoStart" field specifies the path of your firmware,
+; Available values: ${OSNamesMergeWithComma}
+autoStart=${AutoFlashOSName}
+
+; Automatically restore the specified backup at system startup,
+; The "autoRestore" field specifies the path of your backup file.
+autoRestore=
+
+; If the "autoExit" set to true, the eflasher-gui will automatically exit after burning or restoring is completed,
+; You can do something else after burning or restoring by modifying /opt/run-eflasher.sh.
+autoExit=false
+
+[UI]
+; HDMI overscan option, examples:
+;     screenSizePercent=auto
+;     screenSizePercent=90
+screenSizePercent=auto
+
+welcomeMessage=
+hideMenuButton=false
+hideBackupAndRestoreButton=false
+hideStatusBar=false
+EOL
+}
+
+FULLIMG=out/${RAW_FILE}
+
+# ----------------------------------------------------------
+cp ${EFLASHER_RAW_IMG} ${FULLIMG}
+DEV=`losetup -f`
+MNT=/tmp/media_exfat
+rm -rf ${MNT}
+if [ $? -eq 0 ]; then
+        echo ""
+else
+        umount ${MNT}
+        rm -rf ${MNT}
+fi
+# ----------------------------------------------------------
+losetup ${DEV} ${FULLIMG}
+partprobe ${DEV}
+mkdir -p ${MNT}
+mount -t exfat ${DEV}p1 ${MNT}
+gen_eflasher_conf ${MNT} ${TARGET_OS} ${AUTOSTART}
+mkdir -p ${MNT}/${TARGET_OS}
+rm -rf ${MNT}/${TARGET_OS}/*
+echo "copying ${OS_IMAGES_DIR}/* to ${MNT}/${TARGET_OS} ..."
+(cd ${OS_IMAGES_DIR} && find . -maxdepth 1 -type f -exec cp {} ${MNT}/${TARGET_OS} \;)
+
+umount ${MNT}
+losetup -d ${DEV}
+ls -l ${FULLIMG}
+exit 0

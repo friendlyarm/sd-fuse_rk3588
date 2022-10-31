@@ -1,0 +1,7 @@
+*.rej
+*.orig
+*.patch
+*~
+*.diff
+*.deb
+*.changes
