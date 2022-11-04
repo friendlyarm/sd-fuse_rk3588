@@ -16,7 +16,9 @@ if [ ! -f $1/userdata.img ]; then
 	USERDATA_SIZE=104857600
 	echo "Generating empty userdata.img (size:${USERDATA_SIZE})"
 	TMPDIR=`mktemp -d`
-	${PWD}/tools/make_ext4fs -s -l ${USERDATA_SIZE} -a root -L userdata $1/userdata.img ${TMPDIR}
+    IMG_BLK=$((${USERDATA_SIZE} / 4096))
+    [ -f $1/userdata.img ] && rm -f $1/userdata.img
+    ${PWD}/tools/mke2fs -E android_sparse -t ext4 -L userdata -M /root -b 4096 -d ${TMPDIR} $1/userdata.img ${IMG_BLK}
 	rm -rf ${TMPDIR}
 fi
 
