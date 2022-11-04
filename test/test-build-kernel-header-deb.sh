@@ -20,11 +20,11 @@ sudo rm -rf tmp/*
 cd tmp
 git clone ../../.git sd-fuse_rk3588
 cd sd-fuse_rk3588
-if [ -f ../../debian-buster-desktop-arm64-images.tgz ]; then
-	tar xvzf ../../debian-buster-desktop-arm64-images.tgz
+if [ -f ../../debian-bullseye-desktop-arm64-images.tgz ]; then
+	tar xvzf ../../debian-bullseye-desktop-arm64-images.tgz
 else
-	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/debian-buster-desktop-arm64-images.tgz
-    tar xvzf debian-buster-desktop-arm64-images.tgz
+	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/debian-bullseye-desktop-arm64-images.tgz
+    tar xvzf debian-bullseye-desktop-arm64-images.tgz
 fi
 
 if [ -f ../../kernel-rk3588.tgz ]; then
@@ -33,4 +33,4 @@ else
 	git clone ${KERNEL_URL} --depth 1 -b ${KERNEL_BRANCH} kernel-rk3588
 fi
 
-MK_HEADERS_DEB=1 BUILD_THIRD_PARTY_DRIVER=0 KERNEL_SRC=$PWD/kernel-rk3588 ./build-kernel.sh debian-buster-desktop-arm64
+MK_HEADERS_DEB=1 BUILD_THIRD_PARTY_DRIVER=0 KERNEL_SRC=$PWD/kernel-rk3588 ./build-kernel.sh debian-bullseye-desktop-arm64

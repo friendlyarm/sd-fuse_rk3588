@@ -18,14 +18,14 @@ sudo rm -rf tmp/*
 cd tmp
 git clone ../../.git sd-fuse_rk3588
 cd sd-fuse_rk3588
-if [ -f ../../friendlycore-focal-arm64-images.tgz ]; then
-	tar xvzf ../../friendlycore-focal-arm64-images.tgz
+if [ -f ../../ubuntu-jammy-minimal-arm64-images.tgz ]; then
+	tar xvzf ../../ubuntu-jammy-minimal-arm64-images.tgz
 else
-	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/friendlycore-focal-arm64-images.tgz
-    tar xvzf friendlycore-focal-arm64-images.tgz
+	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/ubuntu-jammy-minimal-arm64-images.tgz
+    tar xvzf ubuntu-jammy-minimal-arm64-images.tgz
 fi
 
 git clone ${UBOOT_REPO} --depth 1 -b ${UBOOT_BRANCH} uboot-rk3588
-[ -d rkbin ] || git clone https://github.com/friendlyarm/rkbin --depth 1 -b nanopi5
-UBOOT_SRC=$PWD/uboot-rk3588 ./build-uboot.sh friendlycore-focal-arm64
-sudo ./mk-sd-image.sh friendlycore-focal-arm64
+[ -d rkbin ] || git clone https://github.com/friendlyarm/rkbin --depth 1 -b nanopi6
+UBOOT_SRC=$PWD/uboot-rk3588 ./build-uboot.sh ubuntu-jammy-minimal-arm64
+sudo ./mk-sd-image.sh ubuntu-jammy-minimal-arm64

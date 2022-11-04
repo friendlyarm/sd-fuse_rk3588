@@ -20,11 +20,11 @@ sudo rm -rf tmp/*
 cd tmp
 git clone ../../.git sd-fuse_rk3588
 cd sd-fuse_rk3588
-if [ -f ../../friendlycore-focal-arm64-images.tgz ]; then
-	tar xvzf ../../friendlycore-focal-arm64-images.tgz
+if [ -f ../../ubuntu-jammy-minimal-arm64-images.tgz ]; then
+	tar xvzf ../../ubuntu-jammy-minimal-arm64-images.tgz
 else
-	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/friendlycore-focal-arm64-images.tgz
-    tar xvzf friendlycore-focal-arm64-images.tgz
+	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/ubuntu-jammy-minimal-arm64-images.tgz
+    tar xvzf ubuntu-jammy-minimal-arm64-images.tgz
 fi
 
 if [ -f ../../kernel-rk3588.tgz ]; then
@@ -33,5 +33,5 @@ else
 	git clone ${KERNEL_URL} --depth 1 -b ${KERNEL_BRANCH} kernel-rk3588
 fi
 
-BUILD_THIRD_PARTY_DRIVER=0 KERNEL_SRC=$PWD/kernel-rk3588 ./build-kernel.sh friendlycore-focal-arm64
-sudo ./mk-sd-image.sh friendlycore-focal-arm64
+BUILD_THIRD_PARTY_DRIVER=0 KERNEL_SRC=$PWD/kernel-rk3588 ./build-kernel.sh ubuntu-jammy-minimal-arm64
+sudo ./mk-sd-image.sh ubuntu-jammy-minimal-arm64

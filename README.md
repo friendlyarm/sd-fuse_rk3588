@@ -18,7 +18,7 @@ git clone https://github.com/friendlyarm/sd-fuse_rk3588
 cd sd-fuse_rk3588
 sudo ./fusing.sh /dev/sdX debian-buster-desktop-arm64
 ```
-You can build the following OS: buildroot, debian-buster-desktop-arm64, friendlycore-focal-arm64, friendlywrt22, friendlywrt22-docker, friendlywrt21, friendlywrt21-docker.
+You can build the following OS: buildroot, debian-buster-desktop-arm64, debian-bullseye-desktop-arm64, ubuntu-jammy-desktop-arm64, ubuntu-jammy-minimal-arm64, friendlywrt22, friendlywrt22-docker, friendlywrt21, friendlywrt21-docker.
 Because the android system has to run on the emmc, so you need to make eflasher img to install Android.  
 
 Notes:  

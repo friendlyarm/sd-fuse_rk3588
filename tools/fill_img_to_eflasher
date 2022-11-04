@@ -39,10 +39,14 @@ else
 	case ${TARGET_OS} in
 	buildroot)
 	        RAW_FILE=${SOC}-eflasher-buildroot-linux-5.10-arm64-$(date +%Y%m%d).img ;;
-	friendlycore-focal-arm64)
-	        RAW_FILE=${SOC}-eflasher-friendlycore-lite-focal-5.10-arm64-$(date +%Y%m%d).img ;;
 	debian-buster-desktop-arm64)
 	        RAW_FILE=${SOC}-eflasher-debian-buster-desktop-5.10-arm64-$(date +%Y%m%d).img ;;
+	debian-bullseye-desktop-arm64)
+			RAW_FILE=${SOC}-eflasher-debian-bullseye-desktop-5.10-arm64-$(date +%Y%m%d).img ;;
+	ubuntu-jammy-desktop-arm64)
+			RAW_FILE=${SOC}-eflasher-ubuntu-jammy-desktop-5.10-arm64-$(date +%Y%m%d).img ;;
+	ubuntu-jammy-minimal-arm64)
+			RAW_FILE=${SOC}-eflasher-ubuntu-jammy-minimal-5.10-arm64-$(date +%Y%m%d).img ;;
 	friendlywrt22)
 	        RAW_FILE=${SOC}-eflasher-friendlywrt-22.03-$(date +%Y%m%d).img ;;
 	friendlywrt22-docker)
@@ -76,7 +80,7 @@ gen_eflasher_conf()
     if [ ${3} = "yes" ]; then
         AutoFlashOSName=${2}
     fi
-	OSNamesMergeWithComma="buildroot,friendlywr21,friendlywr22,friendlycore-focal-arm64,debian-buster-desktop-arm64"
+	OSNamesMergeWithComma="buildroot,friendlywr21,friendlywr22,debian-buster-desktop-arm64,debian-bullseye-desktop-arm64,ubuntu-jammy-desktop-arm64,ubuntu-jammy-minimal-arm64"
 	cat > ${1}/eflasher.conf <<EOL
 ; This is the eFlasher configuration file.
 ; See http://wiki.friendlyarm.com/wiki/index.php/EFlasher for detailed information.
