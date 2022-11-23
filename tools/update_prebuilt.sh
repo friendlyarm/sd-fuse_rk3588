@@ -18,7 +18,7 @@ if [ ! -f $1/userdata.img ]; then
 	TMPDIR=`mktemp -d`
     IMG_BLK=$((${USERDATA_SIZE} / 4096))
     [ -f $1/userdata.img ] && rm -f $1/userdata.img
-    ${PWD}/tools/mke2fs -E android_sparse -t ext4 -L userdata -M /root -b 4096 -d ${TMPDIR} $1/userdata.img ${IMG_BLK}
+    MKE2FS_CONFIG=${TOP}/tools/mke2fs.conf ${PWD}/tools/mke2fs -E android_sparse -t ext4 -L userdata -M /root -b 4096 -d ${TMPDIR} $1/userdata.img ${IMG_BLK}
 	rm -rf ${TMPDIR}
 fi
 

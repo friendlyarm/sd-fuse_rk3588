@@ -19,7 +19,7 @@ else
 fi
 
 TOP=$PWD
-true ${MKFS:="${TOP}/tools/mke2fs"}
+true ${MKFS:="MKE2FS_CONFIG=${TOP}/tools/mke2fs.conf ${TOP}/tools/mke2fs"}
 
 if [ ! -d ${ROOTFS_DIR} ]; then
     echo "path '${ROOTFS_DIR}' not found."
