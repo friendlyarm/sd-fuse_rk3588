@@ -6,6 +6,13 @@ set -eu
 	exit 1
 }
 
+# Automatically re-run script under sudo if not root
+if [ $(id -u) -ne 0 ]; then
+    echo "Re-running script under sudo..."
+    sudo "$0" "$@"
+    exit
+fi
+
 TOP=$PWD
 export MKE2FS_CONFIG="${TOP}/tools/mke2fs.conf"
 if [ ! -f ${MKE2FS_CONFIG} ]; then
