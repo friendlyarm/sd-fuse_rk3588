@@ -80,6 +80,16 @@ if [ -f ${TARGET_OS}/rootfs.img ]; then
 
     # Make rootfs.img
     ROOTFS_DIR=${OUT}/rootfs_new
+
+    case ${TARGET_OS} in
+    friendlywrt*)
+        echo "prepare kernel modules for friendlywrt ..."
+        ${TOP}/tools/prepare_friendlywrt_kernelmodules.sh ${ROOTFS_DIR}
+        ;;
+    *)
+        ;;
+    esac
+
     # clean device files
     (cd ${ROOTFS_DIR}/dev && find . ! -type d -exec rm {} \;)
     # calc image size
