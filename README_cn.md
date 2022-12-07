@@ -1,7 +1,7 @@
 # sd-fuse_rk3588
 Create bootable SD card for NanoPi-R6S  
   
-*Read this in other languages: [简体中文](README_cn.md)*  
+*其他语言版本: [English](README.md)*  
   
 ## How to find the /dev name of my SD Card
 Unplug all usb devices:
