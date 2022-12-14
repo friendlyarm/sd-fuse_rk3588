@@ -31,7 +31,7 @@ true ${KCFG:=nanopi6_linux_defconfig}
 KERNEL_REPO=https://github.com/friendlyarm/kernel-rockchip
 KERNEL_BRANCH=nanopi5-v5.10.y_opt
 ARCH=arm64
-KALL=nanopi5-images
+KALL=nanopi6-images
 CROSS_COMPILE=aarch64-linux-gnu-
 export PATH=/opt/FriendlyARM/toolchain/11.3-aarch64/bin/:$PATH
 
@@ -179,7 +179,7 @@ fi
 
 function build_kernel() {
     cd ${KERNEL_SRC}
-    git clean -dxf
+    [ -d .git ] && git clean -dxf
     touch .scmversion
     make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} ${KCFG}
     if [ $? -ne 0 ]; then
