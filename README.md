@@ -1,55 +1,202 @@
+
 # sd-fuse_rk3588
-Create bootable SD card for NanoPi-R6S  
+## Introduction
+This repository is a bunch of scripts to build bootable SD card images for FriendlyElec RK3588 boards, the main features are as follows:
+
+* Create root ﬁlesystem image from a directory
+* Build bootable SD card image
+* Easy way to compile kernel、uboot and third-party driver
   
 *Read this in other languages: [简体中文](README_cn.md)*  
   
-## How to find the /dev name of my SD Card
-Unplug all usb devices:
+## Requirements
+* Recommended Host OS: Ubuntu 18.04 LTS (Bionic Beaver) 64-bit or Higher
+* It is recommended to run this script to initialize the development environment: https://github.com/friendlyarm/build-env-on-ubuntu-bionic
+
+## Kernel Version Support
+The sd-fuse use multiple git branches to support each version of the kernel, the current branche supported kernel version is as follows:
+* 5.10.y   
+  
+For other kernel versions, please switch to the related git branch.
+## Target board OS Supported
+*Notes: The OS name is the same as the directory name, it is written in the script so it cannot be renamed.*
+
+* buildroot
+* debian-buster-desktop-arm64
+* debian-bullseye-desktop-arm64
+* ubuntu-jammy-desktop-arm64
+* ubuntu-jammy-minimal-arm64
+* friendlywrt22
+* friendlywrt22-docker
+* friendlywrt21
+* friendlywrt21-docker
+
+  
+To build an SD card image for ubuntu-jammy-desktop, for example like this:
 ```
-ls -1 /dev > ~/before.txt
+./mk-sd-image.sh ubuntu-jammy-desktop-arm64
 ```
-plug it in, then
+  
+## Where to download files
+The following files may be required to build SD card image:
+* kernel source code: In the directory "07_Source codes" of [NetDrive](https://download.friendlyelec.com/rk3588), or download from [Github](https://github.com/friendlyarm/kernel-rockchip), the branch name is nanopi5-v5.10.y_opt
+* uboot source code: In the directory "07_Source codes" of [NetDrive](https://download.friendlyelec.com/rk3588), or download from [Github](https://github.com/friendlyarm/uboot-rockchip), the branch name is nanopi6-v2017.09
+* pre-built partition image: In the directory "03_Partition image files" of [NetDrive](https://download.friendlyelec.com/rk3588), or download from [HTTP server](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher)
+* compressed root file system tar ball: In the directory "06_File systems" of [NetDrive](https://download.friendlyelec.com/rk3588), or download from [HTTP server](http://112.124.9.243/dvdfiles/rk3588/rootfs)
+  
+If the files are not prepared in advance, the script will automatically download the required files, but the speed may be slower due to the bandwidth of the http server.
+
+## Script Functions
+* fusing.sh: Flash the image to SD card
+* mk-sd-image.sh: Build SD card image
+* mk-emmc-image.sh: Build SD-to-eMMC image, used to install system to eMMC
+
+* build-rootfs-img.sh: Create root ﬁlesystem image(rootfs.img) from a directory
+* build-kernel.sh: Compile the kernel, or kernel headers
+* build-uboot.sh: Compile uboot
+
+## Usage
+### Build your own SD card image
+*Note: Here we use ubuntu-jammy-desktop system as an example*  
+Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), due to the bandwidth of the http server, we recommend downloading the file from the [NetDrive](https://download.friendlyelec.com/rk3588):
 ```
-ls -1 /dev > ~/after.txt
-diff ~/before.txt ~/after.txt
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+cd sd-fuse_rk3588-master
+wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
+tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
+```
+After decompressing, you will get a directory named ubuntu-jammy-desktop-arm64, you can change the files in the directory as needed, for example, replace rootfs.img with your own modified version, or your own compiled kernel and uboot, finally, flash the image to the SD card by entering the following command (The below steps assume your SD card is device /dev/sdX):
+```
+sudo ./fusing.sh /dev/sdX ubuntu-jammy-desktop-arm64
+```
+Or, package it as an SD card image file:
+```
+./mk-sd-image.sh ubuntu-jammy-desktop-arm64
+```
+The following flashable image file will be generated, it is now ready to be used to boot the device into ubuntu-jammy-desktop:  
+```
+out/rk3588-sd-ubuntu-jammy-desktop-5.10-arm64-YYYYMMDD.img
 ```
 
-## Build debian-buster-desktop-arm64 bootable SD card
+#### Create an SD card image that does not use OverlayFS
+The following command will create an SD card image with OverlayFS disabled:
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588
-cd sd-fuse_rk3588
-sudo ./fusing.sh /dev/sdX debian-buster-desktop-arm64
+cp prebuilt/parameter-ext4.txt ubuntu-jammy-desktop-arm64/parameter.txt
+./mk-sd-image.sh ubuntu-jammy-desktop-arm64
 ```
-You can build the following OS: buildroot, debian-buster-desktop-arm64, debian-bullseye-desktop-arm64, ubuntu-jammy-desktop-arm64, ubuntu-jammy-minimal-arm64, friendlywrt22, friendlywrt22-docker, friendlywrt21, friendlywrt21-docker.
-Because the android system has to run on the emmc, so you need to make eflasher img to install Android.  
+Disabling overlayfs is useful for exporting rootfs root filesystem.
 
-Notes:  
-fusing.sh will check the local directory for a directory with the same name as OS, if it does not exist fusing.sh will go to download it from network.  
-So you can download from the netdisk in advance, on netdisk, the images files are stored in a directory called images-for-eflasher, for example:
+
+### Build your own SD-to-eMMC Image
+*Note: Here we use ubuntu-jammy-desktop system as an example*  
+Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), here you need to download the ubuntu-jammy-desktop and eflasher [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-cd sd-fuse_rk3588
-tar xvzf ../images-for-eflasher/debian-buster-desktop-arm64-images.tgz
-./mk-sd-image.sh /dev/sdX debian-buster-desktop-arm64
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+cd sd-fuse_rk3588-master
+wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
+tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
+wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/emmc-flasher-images.tgz
+tar xvzf emmc-flasher-images.tgz
+```
+Then use the following command to build the SD-to-eMMC image, the autostart=yes parameter means it will automatically enter the flash process when booting:
+```
+./mk-emmc-image.sh ubuntu-jammy-desktop-arm64 autostart=yes
+```
+The following flashable image file will be generated, ready to be used to boot the device into eflasher system and then flash ubuntu-jammy-desktop system to eMMC: 
+```
+out/rk3588-eflasher-ubuntu-jammy-desktop-5.10-arm64-YYYYMMDD.img
 ```
 
-## Build an sd card image
-First, download and unpack:
+### Build your own root filesystem image
+*Note: Here we use ubuntu-jammy-desktop system as an example*  
+Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588
-cd sd-fuse_rk3588
-wget --no-proxy http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/debian-buster-desktop-arm64-images.tgz
-tar xvzf debian-buster-desktop-arm64-images.tgz
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+cd sd-fuse_rk3588-master
+wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
+tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
 ```
-Now,  Change something under the debian-buster-desktop-arm64 directory,
-for example, replace the file you compiled, then re-pack sd card image:
+Download the compressed root file system tar ball and unzip it, the unzip command requires root privileges, so you need put sudo in front of the command:
 ```
-./mk-sd-image.sh debian-buster-desktop-arm64
+wget http://112.124.9.243/dvdfiles/rk3588/rootfs/rootfs-ubuntu-jammy-desktop-arm64.tgz
+sudo tar xzf rootfs-ubuntu-jammy-desktop-arm64.tgz
 ```
-The following file will be generated:  
+Change something:
 ```
-out/rk3588-sd-debian-buster-desktop-5.10-arm64-YYYYMMDD.img
+sudo sh -c 'echo hello > ubuntu-jammy-desktop-arm64/rootfs/root/welcome.txt'
 ```
-You can use dd to burn this file into an sd card:
+Make rootfs to img:
 ```
-dd if=out/rk3588-sd-debian-buster-desktop-5.10-arm64-YYYYMMDD.img of=/dev/sdX bs=1M
+sudo ./build-rootfs-img.sh ubuntu-jammy-desktop-arm64/rootfs ubuntu-jammy-desktop-arm64
 ```
+Use the new rootfs.img to build SD card image:
+```
+./mk-sd-image.sh ubuntu-jammy-desktop-arm64
+```
+Or build SD-to-eMMC image:
+```
+./mk-emmc-image.sh ubuntu-jammy-desktop-arm64
+```
+#### Tips
+
+* Export a custom root filesystem from SD card, you need [disable OverlayFS](#create-an-sd-card-image-that-does-not-use-overlayfs) first.
+
+* Using the debootstrap tool, you can customize the file system, pre-install packages, etc.
+
+
+### Compiling the Kernel
+*Note: Here we use ubuntu-jammy-desktop system as an example*  
+Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
+```
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+cd sd-fuse_rk3588-master
+wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
+tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
+```
+Download the kernel source code from github, using the environment variable KERNEL_SRC to specify the local source code directory:
+```
+export KERNEL_SRC=$PWD/kernel
+git clone https://github.com/friendlyarm/kernel-rockchip -b nanopi5-v5.10.y_opt --depth 1 ${KERNEL_SRC}
+```
+Customize the kernel configuration:
+```
+cd $KERNEL_SRC
+touch .scmversion
+make ARCH=arm64 nanopi6_linux_defconfig
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- menuconfig
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- savedefconfig
+cp defconfig ./arch/arm64/configs/my_defconfig                  # Save the configuration as my_defconfig
+git add ./arch/arm64/configs/my_defconfig
+cd -
+```
+Specify the configuration of the kernel using the KCFG environment variable (KERNEL_SRC specifies the source directory), and compile the kernel with your configuration:
+```
+export KERNEL_SRC=$PWD/kernel
+export KCFG=my_defconfig
+./build-kernel.sh ubuntu-jammy-desktop-arm64
+```
+
+#### Compiling the kernel headers
+Set the environment variable MK_HEADERS_DEB to 1, which will compile the kernel headers:
+```
+MK_HEADERS_DEB=1 ./build-kernel.sh ubuntu-jammy-desktop-arm64
+```
+#### Other
+* Set the environment variable BUILD_THIRD_PARTY_DRIVER to 0 will skip the compilation of third-party driver modules
+
+### Compiling the u-boot
+*Note: Here we use ubuntu-jammy-desktop system as an example* 
+Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher)::
+```
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+cd sd-fuse_rk3588-master
+wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
+tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
+```
+Download the u-boot source code from github that matches the OS version, the environment variable UBOOT_SRC is used to specify the local source code directory:
+```
+export UBOOT_SRC=$PWD/uboot
+git clone https://github.com/friendlyarm/uboot-rockchip -b nanopi6-v2017.09 --depth 1 ${UBOOT_SRC}
+./build-uboot.sh ubuntu-jammy-desktop-arm64
+```
+
