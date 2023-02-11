@@ -39,9 +39,9 @@ RK_PARAMETER_TXT=$(dirname $0)/${TARGET_OS}/parameter.txt
 case ${TARGET_OS} in
 buildroot*)
     RAW_SIZE_MB=7800 ;;
-debian-*-arm64)
+debian-*)
 	RAW_SIZE_MB=7800 ;;
-ubuntu-*-arm64)
+ubuntu-*)
 	RAW_SIZE_MB=7800 ;;
 friendlywrt*)
 	RAW_SIZE_MB=1000 ;;
@@ -58,21 +58,9 @@ if [ $# -eq 2 ]; then
 	RAW_FILE=$2
 else
 	case ${TARGET_OS} in
-	buildroot*)
-		RAW_FILE=${SOC}-sd-buildroot-5.10-arm64-$(date +%Y%m%d).img
+	buildroot*|debian-*|ubuntu-*|friendlycore-*)
+		RAW_FILE=${SOC}-sd-${TARGET_OS%-*}-5.10-arm64-$(date +%Y%m%d).img
 		;;
-	debian-buster-desktop-arm64)
-		RAW_FILE=${SOC}-sd-debian-buster-desktop-5.10-arm64-$(date +%Y%m%d).img
-		;;
-	debian-bullseye-desktop-arm64)
-		RAW_FILE=${SOC}-sd-debian-bullseye-desktop-5.10-arm64-$(date +%Y%m%d).img
-		;;
-	ubuntu-jammy-desktop-arm64)
-		RAW_FILE=${SOC}-sd-ubuntu-jammy-desktop-5.10-arm64-$(date +%Y%m%d).img
-		;;
-    ubuntu-jammy-minimal-arm64)
-        RAW_FILE=${SOC}-sd-ubuntu-jammy-minimal-5.10-arm64-$(date +%Y%m%d).img
-        ;;
 	friendlywrt22)
 		RAW_FILE=${SOC}-sd-friendlywrt-22.03-arm64-$(date +%Y%m%d).img
 		;;

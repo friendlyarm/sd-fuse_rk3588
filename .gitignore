@@ -32,6 +32,7 @@ kernel*
 /android*
 /friendlycore*
 /friendlydesktop*
+/ubuntu-jammy-*
 /eflasher
 /buildroot
 /lubuntu*
