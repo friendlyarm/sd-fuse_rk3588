@@ -80,7 +80,7 @@ gen_eflasher_conf()
     if [ ${3} = "yes" ]; then
         AutoFlashOSName=${2}
     fi
-	OSNamesMergeWithComma="buildroot,friendlywr21,friendlywr22,debian-buster-desktop-arm64,debian-bullseye-desktop-arm64,ubuntu-jammy-desktop-arm64,ubuntu-jammy-minimal-arm64"
+	OSNamesMergeWithComma="buildroot,friendlywr21,friendlywr22,debian-buster-desktop-arm64,debian-bullseye-core-arm64,debian-bullseye-minimal-arm64,debian-bullseye-desktop-arm64,ubuntu-jammy-desktop-arm64,ubuntu-jammy-minimal-arm64,friendlycore-focal-arm64"
 	cat > ${1}/eflasher.conf <<EOL
 ; This is the eFlasher configuration file.
 ; See http://wiki.friendlyarm.com/wiki/index.php/EFlasher for detailed information.
