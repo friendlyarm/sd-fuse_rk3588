@@ -36,25 +36,25 @@ true ${TARGET_OS:=${1,,}}
 # Create zero file
 
 RK_PARAMETER_TXT=$(dirname $0)/${TARGET_OS}/parameter.txt
-case ${TARGET_OS} in
-buildroot*)
-    RAW_SIZE_MB=7800 ;;
-debian-*)
-	RAW_SIZE_MB=7800 ;;
-ubuntu-*)
-	RAW_SIZE_MB=7800 ;;
-friendlycore-*)
-	RAW_SIZE_MB=7800 ;;
-friendlywrt*)
-	RAW_SIZE_MB=1000 ;;
-eflasher)
-	RAW_SIZE_MB=7800
-	;;
-*)
-	echo "Error: Unsupported target OS: ${TARGET_OS}"
-	exit -1
-	;;
-esac
+true ${RAW_SIZE_MB:=0}
+if [ $RAW_SIZE_MB -eq 0 ]; then
+	case ${TARGET_OS} in
+	buildroot*)
+		RAW_SIZE_MB=7800 ;;
+	debian-*)
+		RAW_SIZE_MB=7800 ;;
+	ubuntu-*)
+		RAW_SIZE_MB=7800 ;;
+	friendlycore-*)
+		RAW_SIZE_MB=7800 ;;
+	friendlywrt*)
+		RAW_SIZE_MB=1000 ;;
+	eflasher)
+		RAW_SIZE_MB=7800 ;;
+	*)
+		RAW_SIZE_MB=7800 ;;
+	esac
+fi
 	 
 if [ $# -eq 2 ]; then
 	RAW_FILE=$2
