@@ -231,7 +231,7 @@ function build_kernel() {
     # build nft-fullcone
     (cd ${OUT} && {
         if [ ! -d nft-fullcone ]; then
-            git clone https://github.com/fullcone-nat-nftables/nft-fullcone -b master nft-fullcone
+            git clone https://github.com/friendlyarm/nft-fullcone -b master nft-fullcone
         fi
         (cd nft-fullcone/src/ && {
             make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} -C ${KERNEL_SRC} M=$(pwd)
