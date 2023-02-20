@@ -13,7 +13,7 @@ BOOT_DIR=$1
 IMG_FILE=$2
 
 if [ ! -d ${BOOT_DIR} ]; then
-    echo "path '${BOOT_DIR}' not found."
+    echo "error: path ${BOOT_DIR} not found."
     exit 1
 fi
 
