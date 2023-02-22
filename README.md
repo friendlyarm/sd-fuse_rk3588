@@ -24,12 +24,15 @@ For other kernel versions, please switch to the related git branch.
 * buildroot
 * debian-buster-desktop-arm64
 * debian-bullseye-desktop-arm64
+* debian-bullseye-minimal-arm64
+* debian-bullseye-core-arm64
 * ubuntu-jammy-desktop-arm64
 * ubuntu-jammy-minimal-arm64
 * friendlywrt22
 * friendlywrt22-docker
 * friendlywrt21
 * friendlywrt21-docker
+* eflasher
 
   
 To build an SD card image for ubuntu-jammy-desktop, for example like this:
@@ -60,7 +63,7 @@ If the files are not prepared in advance, the script will automatically download
 *Note: Here we use ubuntu-jammy-desktop system as an example*  
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), due to the bandwidth of the http server, we recommend downloading the file from the [NetDrive](https://download.friendlyelec.com/rk3588):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
 cd sd-fuse_rk3588-master
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -91,7 +94,7 @@ Disabling overlayfs is useful for exporting rootfs root filesystem.
 *Note: Here we use ubuntu-jammy-desktop system as an example*  
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), here you need to download the ubuntu-jammy-desktop and eflasher [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
 cd sd-fuse_rk3588-master
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -111,7 +114,7 @@ out/rk3588-eflasher-ubuntu-jammy-desktop-5.10-arm64-YYYYMMDD.img
 *Note: Here we use ubuntu-jammy-desktop system as an example*  
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
 cd sd-fuse_rk3588-master
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -148,7 +151,7 @@ Or build SD-to-eMMC image:
 *Note: Here we use ubuntu-jammy-desktop system as an example*  
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
 cd sd-fuse_rk3588-master
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -188,7 +191,7 @@ MK_HEADERS_DEB=1 ./build-kernel.sh ubuntu-jammy-desktop-arm64
 *Note: Here we use ubuntu-jammy-desktop system as an example* 
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher)::
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
 cd sd-fuse_rk3588-master
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
