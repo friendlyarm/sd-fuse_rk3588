@@ -110,7 +110,19 @@ tar xvzf emmc-flasher-images.tgz
 out/rk3588-eflasher-ubuntu-jammy-desktop-5.10-arm64-YYYYMMDD.img
 ```
 
-### 定制文件系统
+### 备份文件系统并创建SD映像(将系统及应用复制到另一块开发板)
+#### 备份根文件系统
+开发板上执行以下命令，备份整个文件系统（包括OS与数据)：  
+```
+sudo passwd root
+su root
+cd /
+tar --warning=no-file-changed -cvpzf /rootfs.tar.gz \
+    --exclude=/rootfs.tar.gz --exclude=/var/lib/docker/runtimes \
+    --exclude=/etc/firstuser --exclude=/etc/friendlyelec-release \
+    --exclude=/usr/local/first_boot_flag --one-file-system /
+```
+#### 从根文件系统制作一个可启动的SD卡
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
 下载本仓库到本地, 然后下载并解压[分区镜像压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
@@ -119,7 +131,7 @@ cd sd-fuse_rk3588-master
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
 ```
-下载文件系统压缩包并解压, 需要使用root权限, 因此解压命令需要加上sudo:
+解压上一章节导出的rootfs.tar.gz，或者从以下网址下载文件系统压缩包并解压, 需要使用root权限, 因此解压命令需要加上sudo:
 ```
 wget http://112.124.9.243/dvdfiles/rk3588/rootfs/rootfs-ubuntu-jammy-desktop-arm64.tgz
 sudo tar xzf rootfs-ubuntu-jammy-desktop-arm64.tgz
@@ -140,11 +152,6 @@ sudo ./build-rootfs-img.sh ubuntu-jammy-desktop-arm64/rootfs ubuntu-jammy-deskto
 ```
 ./mk-emmc-image.sh ubuntu-jammy-desktop-arm64
 ```
-#### 文件系统Tips:
-
-* 要从一个SD卡中导出定制好的文件系统, 你需要提前[禁用OverlayFS](#创建一个不使用overlayfs的sd卡镜像)
-
-* 可利用debootstrap工具对文件系统进行定制, 预装软件包等
 
 ### 编译内核
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
