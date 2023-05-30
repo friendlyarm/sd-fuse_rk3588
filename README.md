@@ -87,7 +87,7 @@ The following command will create an SD card image with OverlayFS disabled:
 cp prebuilt/parameter-ext4.txt ubuntu-jammy-desktop-arm64/parameter.txt
 ./mk-sd-image.sh ubuntu-jammy-desktop-arm64
 ```
-Disabling overlayfs is useful for exporting rootfs root filesystem.
+Disabling overlayfs is useful for exporting root filesystem.
 
 
 ### Build your own SD-to-eMMC Image
