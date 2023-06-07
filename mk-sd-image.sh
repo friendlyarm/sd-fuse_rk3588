@@ -43,6 +43,8 @@ if [ $RAW_SIZE_MB -eq 0 ]; then
 		RAW_SIZE_MB=7800 ;;
 	debian-*)
 		RAW_SIZE_MB=7800 ;;
+	android*)
+		RAW_SIZE_MB=7800 ;;
 	ubuntu-*)
 		RAW_SIZE_MB=7800 ;;
 	friendlycore-*)
@@ -60,7 +62,7 @@ if [ $# -eq 2 ]; then
 	RAW_FILE=$2
 else
 	case ${TARGET_OS} in
-	buildroot*|debian-*|ubuntu-*|friendlycore-*)
+	buildroot*|debian-*|ubuntu-*|friendlycore-*|android*)
 		RAW_FILE=${SOC}-sd-${TARGET_OS%-*}-5.10-arm64-$(date +%Y%m%d).img
 		;;
 	friendlywrt22)

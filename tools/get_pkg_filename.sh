@@ -4,6 +4,10 @@ TARGET_OS=$1
 case ${TARGET_OS} in
 buildroot*)
         ROMFILE=buildroot-images.tgz;;
+android12)
+        ROMFILE=android-12-images.tgz;;
+androidtv)
+        ROMFILE=android-tv-images.tgz;;
 friendlywrt22)
         ROMFILE=friendlywrt22-images.tgz;;
 friendlywrt22-docker)
