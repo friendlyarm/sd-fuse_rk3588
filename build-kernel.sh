@@ -25,6 +25,7 @@ true ${DISABLE_BUILDKERNEL:=0}
 true ${LOGO:=}
 true ${KERNEL_LOGO:=}
 true ${MK_HEADERS_DEB:=0}
+true ${ENABLE_BACKPORTS:=1}
 true ${BUILD_THIRD_PARTY_DRIVER:=1}
 true ${KCFG:=nanopi6_linux_defconfig}
 
@@ -33,6 +34,7 @@ KERNEL_BRANCH=nanopi5-v5.10.y_opt
 ARCH=arm64
 KALL=nanopi6-images
 CROSS_COMPILE=aarch64-linux-gnu-
+BACKPORT=
 export PATH=/opt/FriendlyARM/toolchain/11.3-aarch64/bin/:$PATH
 
 declare -a KERNEL_3RD_DRIVERS=("https://github.com/friendlyarm/rtl8821CU" "https://github.com/friendlyarm/rtl8822bu" "https://github.com/friendlyarm/rtl8812au")
@@ -48,11 +50,11 @@ build_external_module() {
             git clone ${DRIVER_REPO} -b ${DRIVER_BRANCHE} ${DRIVER_NAME}
         else
             (cd ${DRIVER_NAME} && {
-                make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} KSRC=${KERNEL_SRC} CONFIG_VENDOR_FRIENDLYARM=y clean
+                make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} ${BACKPORT} KSRC=${KERNEL_SRC} CONFIG_VENDOR_FRIENDLYARM=y clean
             })
         fi
         (cd ${DRIVER_NAME} && {
-            make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} KSRC=${KERNEL_SRC} CONFIG_VENDOR_FRIENDLYARM=y -j$(nproc)
+            make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} ${BACKPORT} KSRC=${KERNEL_SRC} CONFIG_VENDOR_FRIENDLYARM=y -j$(nproc)
             if [ $? -ne 0 ]; then
                 echo "failed to build 3rd kernel modules: ${DRIVER_NAME}"
                 exit 1
@@ -61,6 +63,23 @@ build_external_module() {
             cp ${DRIVER_NAME}.ko ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER} -afv
         })
     })
+}
+function build_backports() {
+    pushd ${OUT}
+        if [ ! -d backports ]; then
+            git clone https://github.com/friendlyarm/backports -b main --depth 1 backports
+        fi
+        pushd backports
+            [ -f .config ] || make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} KLIB_BUILD=${KERNEL_SRC} defconfig-nanopi6
+            make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} KLIB_BUILD=${KERNEL_SRC} -j$(nproc)
+            rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/kernel/net/wireless/cfg80211.ko
+            rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/kernel/net/mac80211/mac80211.ko
+            rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/kernel/drivers/net/wireless/
+            rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/kernel/drivers/staging/rtl8188eu/
+            make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} KLIB_BUILD=${KERNEL_SRC} INSTALL_MOD_PATH=${KMODULES_OUTDIR} INSTALL_MOD_STRIP=1 install -j$(nproc)
+            BACKPORT="BACKPORT_DIR=$(pwd)"
+        popd
+    popd
 }
 
 # 
@@ -95,9 +114,11 @@ function usage() {
        echo "    LOGO=/tmp/logo.bmp KERNEL_LOGO=/tmp/logo_kernel.bmp ./build-kernel.sh debian-buster-desktop-arm64"
        echo "    ./mk-emmc-image.sh debian-buster-desktop-arm64"
        echo "# also can do:"
-       echo "    KERNEL_SRC=~/mykernel ./build-kernel.sh debian-buster-desktop-arm64"
-       echo "# other options, build kernel-headers, enable/disable 3rd drivers:"
+       echo "    KERNEL_SRC=\$PWD/kernel ./build-kernel.sh debian-buster-desktop-arm64"
+       echo "# build kernel-headers, enable/disable 3rd drivers:"
        echo "    MK_HEADERS_DEB=1 BUILD_THIRD_PARTY_DRIVER=0 ./build-kernel.sh debian-buster-desktop-arm64"
+       echo "# build kernel without backports:"
+       echo "    ENABLE_BACKPORTS=0 KERNEL_SRC=\$PWD/kernel ./build-kernel.sh debian-buster-desktop-arm64"
        exit 0
 }
 
@@ -239,16 +260,22 @@ function build_kernel() {
         })
     })
 
+    if [ ${ENABLE_BACKPORTS} -eq 1 ]; then
+        # build backports driver (mt7921 etc.)
+        build_backports
+    fi
+
     # build rtw_8822ce wifi driver
     (cd ${OUT} && {
         if [ ! -d rtw88 ]; then
-            git clone https://github.com/lwfinger/rtw88 -b master rtw88
-            (cd rtw88 && git reset 4a9cece58e6ec7894544783ac84808ce61fb5d22 --hard)
+            git clone https://github.com/friendlyarm/rtw88 -b master --depth 1 rtw88
         fi
         (cd rtw88/ && {
-            make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} -C ${KERNEL_SRC} M=$(pwd)
+            make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} ${BACKPORT} -C ${KERNEL_SRC} M=$(pwd)
+            # Remove rtw88 backport
+            rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/updates/drivers/net/wireless/realtek/rtw88/
             # Disable rtw88 usb support
-            rm -f rtw88_*.ko rtw_usb.ko
+            rm -f rtw_88*u.ko
             cp *.ko ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER} -afv
         })
     })
