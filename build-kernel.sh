@@ -316,7 +316,7 @@ function build_kernel() {
             if [ -d ${HEADERS_SCRIPT_DIR} ]; then
                 cp -avf ${HEADERS_SCRIPT_DIR}/* ./usr/src/linux-headers-*${KERNEL_VER}*/scripts/
                 if [ $? -ne 0 ]; then
-                    echo "failed to copy bin file to /usr/src/linux-headers-5.15.y."
+                    echo "failed to copy bin file to /usr/src/linux-headers-x.y.z."
                     exit 1
                 fi
             else
