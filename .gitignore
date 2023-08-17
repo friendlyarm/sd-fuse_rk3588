@@ -29,6 +29,7 @@ kernel*
 /vendor
 /friendlywrt*
 /debian*
+/ubuntu-*
 /android*
 /friendlycore*
 /friendlydesktop*
