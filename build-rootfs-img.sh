@@ -57,8 +57,17 @@ else
     [ -f ${IMG_FILE} ] && rm -f ${IMG_FILE}
     ${MKFS} -N ${INODE_SIZE} ${MKFS_OPTS} -d ${ROOTFS_DIR} ${IMG_FILE} ${IMG_BLK}
 fi
+
 if [ ${TARGET_OS} != "eflasher" ]; then
-    ${TOP}/tools/generate-partmap-txt.sh ${IMG_SIZE} ${TARGET_OS}
+    case ${TARGET_OS} in
+    openmediavault-*)
+        # disable overlayfs for openmediavault
+        cp ${TOP}/prebuilt/parameter-ext4.txt ${TOP}/${TARGET_OS}/parameter.txt
+        ;;
+    *)
+        ${TOP}/tools/generate-partmap-txt.sh ${IMG_SIZE} ${TARGET_OS}
+        ;;
+    esac
 fi
 
 echo "generating ${IMG_FILE} done."

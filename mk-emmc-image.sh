@@ -19,7 +19,7 @@ set -eu
 # http://www.gnu.org/licenses/gpl-2.0.html.
 
 function usage() {
-       echo "Usage: $0 <buildroot|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker|debian-buster-desktop-arm64> [img filename] [options]"
+       echo "Usage: $0 <buildroot|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker|friendlycore-focal-arm64|openmediavault-arm64|debian-buster-desktop-arm64> [img filename] [options]"
        echo "    examples:"
        echo "        ./mk-emmc-image.sh debian-buster-desktop-arm64 filename=myimg-emmc.img autostart=yes"
        echo "        ./mk-emmc-image.sh debian-buster-desktop-arm64 autostart=yes"
@@ -38,7 +38,7 @@ true ${SOC:=rk3588}
 true ${TARGET_OS:=${1,,}}
 
 case ${TARGET_OS} in
-buildroot* | friendlycore-* | debian-* | ubuntu-* | friendlywrt* | android*)
+buildroot* | friendlycore-focal-arm64 | openmediavault-* | debian-* | ubuntu-* | friendlywrt* | android*)
         ;;
 *)
         echo "Error: Unsupported target OS: ${TARGET_OS}"

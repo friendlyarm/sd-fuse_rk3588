@@ -132,7 +132,7 @@ true ${TARGET_OS:=${1,,}}
 
 
 case ${TARGET_OS} in
-buildroot* | friendlycore-* | debian-* | ubuntu-* | friendlywrt* | eflasher )
+buildroot* | friendlycore-* | openmediavault-* | debian-* | ubuntu-* | friendlywrt* | eflasher )
         ;;
 *)
         echo "Error: Unsupported target OS: ${TARGET_OS}"
