@@ -25,12 +25,11 @@ true ${DISABLE_BUILDKERNEL:=0}
 true ${LOGO:=}
 true ${KERNEL_LOGO:=}
 true ${MK_HEADERS_DEB:=0}
-true ${ENABLE_BACKPORTS:=1}
 true ${BUILD_THIRD_PARTY_DRIVER:=1}
 true ${KCFG:=nanopi6_linux_defconfig}
 
 KERNEL_REPO=https://github.com/friendlyarm/kernel-rockchip
-KERNEL_BRANCH=nanopi5-v5.10.y_opt
+KERNEL_BRANCH=nanopi6-v6.1.y
 ARCH=arm64
 KALL=nanopi6-images
 CROSS_COMPILE=aarch64-linux-gnu-
@@ -64,23 +63,6 @@ build_external_module() {
         })
     })
 }
-function build_backports() {
-    pushd ${OUT}
-        if [ ! -d backports ]; then
-            git clone https://github.com/friendlyarm/backports -b main --depth 1 backports
-        fi
-        pushd backports
-            [ -f .config ] || make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} KLIB_BUILD=${KERNEL_SRC} defconfig-nanopi6
-            make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} KLIB_BUILD=${KERNEL_SRC} -j$(nproc)
-            rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/kernel/net/wireless/cfg80211.ko
-            rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/kernel/net/mac80211/mac80211.ko
-            rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/kernel/drivers/net/wireless/
-            rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/kernel/drivers/staging/rtl8188eu/
-            make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} KLIB_BUILD=${KERNEL_SRC} INSTALL_MOD_PATH=${KMODULES_OUTDIR} INSTALL_MOD_STRIP=1 install -j$(nproc)
-            BACKPORT="BACKPORT_DIR=$(pwd)"
-        popd
-    popd
-}
 
 # 
 # kernel logo:
@@ -101,7 +83,7 @@ KMODULES_OUTDIR="${OUT}/output_${SOC}_kmodules"
 true ${KERNEL_SRC:=${OUT}/kernel-${SOC}}
 
 function usage() {
-       echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bullseye-core-arm64|friendlycore-focal-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker|eflasher>"
+       echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bullseye-core-arm64|friendlycore-focal-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|openmediavault-arm64|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker|eflasher>"
        echo "# example:"
        echo "# clone kernel source from github:"
        echo "    git clone ${KERNEL_REPO} --depth 1 -b ${KERNEL_BRANCH} ${KERNEL_SRC}"
@@ -117,8 +99,6 @@ function usage() {
        echo "    KERNEL_SRC=\$PWD/kernel ./build-kernel.sh debian-buster-desktop-arm64"
        echo "# build kernel-headers, enable/disable 3rd drivers:"
        echo "    MK_HEADERS_DEB=1 BUILD_THIRD_PARTY_DRIVER=0 ./build-kernel.sh debian-buster-desktop-arm64"
-       echo "# build kernel without backports:"
-       echo "    ENABLE_BACKPORTS=0 KERNEL_SRC=\$PWD/kernel ./build-kernel.sh debian-buster-desktop-arm64"
        exit 0
 }
 
@@ -259,11 +239,6 @@ function build_kernel() {
             cp nft_fullcone.ko ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER} -afv
         })
     })
-
-    if [ ${ENABLE_BACKPORTS} -eq 1 ]; then
-        # build backports driver (mt7921 etc.)
-        build_backports
-    fi
 
     # build rtw_8822ce wifi driver
     (cd ${OUT} && {

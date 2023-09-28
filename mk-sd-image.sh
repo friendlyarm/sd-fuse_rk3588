@@ -65,7 +65,7 @@ if [ $# -eq 2 ]; then
 else
 	case ${TARGET_OS} in
 	buildroot*|friendlycore-*|openmediavault-*|debian-*|ubuntu-*)
-		RAW_FILE=${SOC}-sd-${TARGET_OS%-*}-5.10-arm64-$(date +%Y%m%d).img
+		RAW_FILE=${SOC}-sd-${TARGET_OS%-*}-6.1-arm64-$(date +%Y%m%d).img
 		;;
 	friendlywrt22)
 		RAW_FILE=${SOC}-sd-friendlywrt-22.03-arm64-$(date +%Y%m%d).img

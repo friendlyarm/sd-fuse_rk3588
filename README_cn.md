@@ -16,7 +16,7 @@ sd-fuse 提供一些工具和脚本, 用于制作SD卡固件, 具体用途如下
 
 ## 支持的内核版本
 sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的内核版本为:
-* 5.10.y   
+* 6.1.y   
   
 其他内核版本, 请切换到相应的git分支
 ## 支持的目标板OS
@@ -33,6 +33,7 @@ sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的�
 * friendlywrt21
 * friendlywrt21-docker
 * eflasher
+* openmediavault-arm64
 
   
 这些OS名称是分区镜像文件存放的目录名, 在脚本内亦有严格定义, 所以不能改动, 例如要制作ubuntu-jammy-desktop的SD固件, 可使用如下命令:
@@ -42,7 +43,7 @@ sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的�
   
 ## 获得打包固件所需要的素材
 制作固件所需要的素材有:
-* 内核源代码: 在[网盘](https://download.friendlyelec.com/rk3588)的 "07_源代码" 目录中, 或者从[此github链接](https://github.com/friendlyarm/kernel-rockchip)下载, 分支为nanopi5-v5.10.y_opt
+* 内核源代码: 在[网盘](https://download.friendlyelec.com/rk3588)的 "07_源代码" 目录中, 或者从[此github链接](https://github.com/friendlyarm/kernel-rockchip)下载, 分支为nanopi6-v6.1.y
 * uboot源代码: 在[网盘](https://download.friendlyelec.com/rk3588)的 "07_源代码" 目录中, 或者从[此github链接](https://github.com/friendlyarm/uboot-rockchip)下载, 分支为nanopi6-v2017.09
 * 分区镜像文件: 在[网盘](https://download.friendlyelec.com/rk3588)的 "03_分区镜像文件" 目录中, 或者从[此http链接](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher)下载
 * 文件系统压缩包: 在[网盘](https://download.friendlyelec.com/rk3588)的 "06_文件系统" 目录中, 或者从[此http链接](http://112.124.9.243/dvdfiles/rk3588/rootfs)下载
@@ -63,8 +64,8 @@ sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的�
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
 下载本仓库到本地, 然后下载并解压ubuntu-jammy-desktop系统的[分区镜像文件压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), 由于http服务器带宽的关系, wget命令可能会比较慢, 推荐从网盘上下载同名的文件:
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
-cd sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
 ```
@@ -78,7 +79,7 @@ sudo ./fusing.sh /dev/sdX ubuntu-jammy-desktop-arm64
 ```
 命令执行成功后, 将生成以下文件, 此文件可烧写到SD卡运行:  
 ```
-out/rk3588-sd-ubuntu-jammy-desktop-5.10-arm64-YYYYMMDD.img
+out/rk3588-sd-ubuntu-jammy-desktop-6.1-arm64-YYYYMMDD.img
 ```
 
 #### 创建一个不使用OverlayFS的SD卡镜像
@@ -94,8 +95,8 @@ cp prebuilt/parameter-ext4.txt ubuntu-jammy-desktop-arm64/parameter.txt
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
 下载本仓库到本地, 然后下载并解压[分区镜像文件压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), 这里需要下载ubuntu-jammy-desktop和eflasher系统的文件:
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
-cd sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/emmc-flasher-images.tgz
@@ -107,7 +108,7 @@ tar xvzf emmc-flasher-images.tgz
 ```
 命令执行成功后, 将生成以下文件, 此文件可烧写到SD卡运行:  
 ```
-out/rk3588-eflasher-ubuntu-jammy-desktop-5.10-arm64-YYYYMMDD.img
+out/rk3588-eflasher-ubuntu-jammy-desktop-6.1-arm64-YYYYMMDD.img
 ```
 
 ### 备份文件系统并创建SD映像(将系统及应用复制到另一块开发板)
@@ -126,8 +127,8 @@ tar --warning=no-file-changed -cvpzf /rootfs.tar.gz \
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
 下载本仓库到本地, 然后下载并解压[分区镜像压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
-cd sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
 ```
@@ -157,15 +158,15 @@ sudo ./build-rootfs-img.sh ubuntu-jammy-desktop-arm64/rootfs ubuntu-jammy-deskto
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
 下载本仓库到本地, 然后下载并解压[分区镜像压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
-cd sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
 ```
 从github克隆内核源代码到本地, 用环境变量KERNEL_SRC来指定本地源代码目录:
 ```
 export KERNEL_SRC=$PWD/kernel
-git clone https://github.com/friendlyarm/kernel-rockchip -b nanopi5-v5.10.y_opt --depth 1 ${KERNEL_SRC}
+git clone https://github.com/friendlyarm/kernel-rockchip -b nanopi6-v6.1.y --depth 1 ${KERNEL_SRC}
 ```
 根据需要配置内核:
 ```
@@ -197,8 +198,8 @@ MK_HEADERS_DEB=1 ./build-kernel.sh ubuntu-jammy-desktop-arm64
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明* 
 下载本仓库到本地, 然后下载并解压[分区镜像压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-master
-cd sd-fuse_rk3588-master
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
 ```
