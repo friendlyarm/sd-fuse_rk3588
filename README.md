@@ -28,6 +28,8 @@ For other kernel versions, please switch to the related git branch.
 * debian-bullseye-core-arm64
 * ubuntu-jammy-desktop-arm64
 * ubuntu-jammy-minimal-arm64
+* friendlywrt23
+* friendlywrt23-docker
 * friendlywrt22
 * friendlywrt22-docker
 * friendlywrt21

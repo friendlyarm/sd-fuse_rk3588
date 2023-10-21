@@ -28,6 +28,8 @@ sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的�
 * debian-bullseye-core-arm64
 * ubuntu-jammy-desktop-arm64
 * ubuntu-jammy-minimal-arm64
+* friendlywrt23
+* friendlywrt23-docker
 * friendlywrt22
 * friendlywrt22-docker
 * friendlywrt21
