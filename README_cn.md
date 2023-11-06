@@ -22,17 +22,21 @@ sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的�
 ## 支持的目标板OS
 
 * buildroot
-* debian-buster-desktop-arm64
 * debian-bullseye-desktop-arm64
 * debian-bullseye-minimal-arm64
 * debian-bullseye-core-arm64
 * ubuntu-jammy-desktop-arm64
 * ubuntu-jammy-minimal-arm64
+* ubuntu-jammy-x11-desktop-arm64
+* ubuntu-focal-desktop-arm64
 * friendlywrt22
 * friendlywrt22-docker
 * friendlywrt21
 * friendlywrt21-docker
 * eflasher
+* android12
+* androidtv
+* openmediavault-arm64
 
   
 这些OS名称是分区镜像文件存放的目录名, 在脚本内亦有严格定义, 所以不能改动, 例如要制作ubuntu-jammy-desktop的SD固件, 可使用如下命令:

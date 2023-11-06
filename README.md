@@ -22,17 +22,21 @@ For other kernel versions, please switch to the related git branch.
 *Notes: The OS name is the same as the directory name, it is written in the script so it cannot be renamed.*
 
 * buildroot
-* debian-buster-desktop-arm64
 * debian-bullseye-desktop-arm64
 * debian-bullseye-minimal-arm64
 * debian-bullseye-core-arm64
 * ubuntu-jammy-desktop-arm64
 * ubuntu-jammy-minimal-arm64
+* ubuntu-jammy-x11-desktop-arm64
+* ubuntu-focal-desktop-arm64
 * friendlywrt22
 * friendlywrt22-docker
 * friendlywrt21
 * friendlywrt21-docker
 * eflasher
+* android12
+* androidtv
+* openmediavault-arm64
 
   
 To build an SD card image for ubuntu-jammy-desktop, for example like this:
