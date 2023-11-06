@@ -22,16 +22,15 @@ For other kernel versions, please switch to the related git branch.
 *Notes: The OS name is the same as the directory name, it is written in the script so it cannot be renamed.*
 
 * buildroot
-* debian-buster-desktop-arm64
 * debian-bullseye-desktop-arm64
 * debian-bullseye-minimal-arm64
 * debian-bullseye-core-arm64
 * ubuntu-jammy-desktop-arm64
 * ubuntu-jammy-minimal-arm64
+* ubuntu-jammy-x11-desktop-arm64
+* ubuntu-focal-desktop-arm64
 * friendlywrt23
 * friendlywrt23-docker
-* friendlywrt22
-* friendlywrt22-docker
 * friendlywrt21
 * friendlywrt21-docker
 * eflasher
@@ -66,7 +65,7 @@ If the files are not prepared in advance, the script will automatically download
 *Note: Here we use ubuntu-jammy-desktop system as an example*  
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), due to the bandwidth of the http server, we recommend downloading the file from the [NetDrive](https://download.friendlyelec.com/rk3588):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -97,7 +96,7 @@ Disabling overlayfs is useful for exporting root filesystem.
 *Note: Here we use ubuntu-jammy-desktop system as an example*  
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), here you need to download the ubuntu-jammy-desktop and eflasher [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -128,7 +127,7 @@ tar --warning=no-file-changed -cvpzf /rootfs.tar.gz \
 *Note: Here we use ubuntu-jammy-desktop system as an example*  
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -159,7 +158,7 @@ Or build SD-to-eMMC image:
 *Note: Here we use ubuntu-jammy-desktop system as an example*  
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -199,7 +198,7 @@ MK_HEADERS_DEB=1 ./build-kernel.sh ubuntu-jammy-desktop-arm64
 *Note: Here we use ubuntu-jammy-desktop system as an example* 
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher)::
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz

@@ -22,16 +22,15 @@ sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的�
 ## 支持的目标板OS
 
 * buildroot
-* debian-buster-desktop-arm64
 * debian-bullseye-desktop-arm64
 * debian-bullseye-minimal-arm64
 * debian-bullseye-core-arm64
 * ubuntu-jammy-desktop-arm64
 * ubuntu-jammy-minimal-arm64
+* ubuntu-jammy-x11-desktop-arm64
+* ubuntu-focal-desktop-arm64
 * friendlywrt23
 * friendlywrt23-docker
-* friendlywrt22
-* friendlywrt22-docker
 * friendlywrt21
 * friendlywrt21-docker
 * eflasher
@@ -66,7 +65,7 @@ sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的�
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
 下载本仓库到本地, 然后下载并解压ubuntu-jammy-desktop系统的[分区镜像文件压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), 由于http服务器带宽的关系, wget命令可能会比较慢, 推荐从网盘上下载同名的文件:
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -97,7 +96,7 @@ cp prebuilt/parameter-ext4.txt ubuntu-jammy-desktop-arm64/parameter.txt
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
 下载本仓库到本地, 然后下载并解压[分区镜像文件压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher), 这里需要下载ubuntu-jammy-desktop和eflasher系统的文件:
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -129,7 +128,7 @@ tar --warning=no-file-changed -cvpzf /rootfs.tar.gz \
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
 下载本仓库到本地, 然后下载并解压[分区镜像压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -160,7 +159,7 @@ sudo ./build-rootfs-img.sh ubuntu-jammy-desktop-arm64/rootfs ubuntu-jammy-deskto
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明*  
 下载本仓库到本地, 然后下载并解压[分区镜像压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
@@ -200,7 +199,7 @@ MK_HEADERS_DEB=1 ./build-kernel.sh ubuntu-jammy-desktop-arm64
 *注: 这里以ubuntu-jammy-desktop系统为例进行说明* 
 下载本仓库到本地, 然后下载并解压[分区镜像压缩包](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
 ```
-git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b master --single-branch sd-fuse_rk3588-kernel6.1
+git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
 cd sd-fuse_rk3588-kernel6.1
 wget http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
