@@ -23,7 +23,7 @@ cd sd-fuse_rk3588
 if [ -f ../../debian-bullseye-desktop-arm64-images.tgz ]; then
 	tar xvzf ../../debian-bullseye-desktop-arm64-images.tgz
 else
-	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/debian-bullseye-desktop-arm64-images.tgz
+	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/debian-bullseye-desktop-arm64-images.tgz
     tar xvzf debian-bullseye-desktop-arm64-images.tgz
 fi
 

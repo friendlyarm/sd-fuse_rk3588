@@ -16,9 +16,9 @@ sudo rm -rf tmp/*
 cd tmp
 git clone ../../.git sd-fuse_rk3588
 cd sd-fuse_rk3588
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/ubuntu-jammy-minimal-arm64-images.tgz
+wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/ubuntu-jammy-minimal-arm64-images.tgz
 tar xzf ubuntu-jammy-minimal-arm64-images.tgz
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/emmc-flasher-images.tgz
+wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/emmc-flasher-images.tgz
 tar xzf emmc-flasher-images.tgz
 wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/rootfs/rootfs-ubuntu-jammy-minimal-arm64.tgz
 

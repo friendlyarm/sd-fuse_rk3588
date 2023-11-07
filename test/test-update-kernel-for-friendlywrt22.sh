@@ -23,7 +23,7 @@ cd sd-fuse_rk3588
 if [ -f ../../friendlywrt22-images.tgz ]; then
 	tar xvzf ../../friendlywrt22-images.tgz
 else
-	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/friendlywrt22-images.tgz
+	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/friendlywrt22-images.tgz
     tar xvzf friendlywrt22-images.tgz
 fi
 
