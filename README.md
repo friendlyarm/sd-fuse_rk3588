@@ -24,7 +24,7 @@ For other kernel versions, please switch to the related git branch.
 
 * debian-bullseye-desktop-arm64
 * debian-bullseye-minimal-arm64
-* debian-bullseye-core-arm64
+* debian-bookworm-core-arm64
 * ubuntu-jammy-desktop-arm64
 * ubuntu-jammy-minimal-arm64
 * ubuntu-jammy-x11-desktop-arm64

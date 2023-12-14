@@ -45,8 +45,8 @@ tar xzf debian-buster-desktop-arm64-images.tgz
 wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/debian-bullseye-desktop-arm64-images.tgz
 tar xzf debian-bullseye-desktop-arm64-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/debian-bullseye-core-arm64-images.tgz
-tar xzf debian-bullseye-core-arm64-images.tgz
+wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/debian-bookworm-core-arm64-images.tgz
+tar xzf debian-bookworm-core-arm64-images.tgz
 
 wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/debian-bullseye-minimal-arm64-images.tgz
 tar xzf debian-bullseye-minimal-arm64-images.tgz
@@ -63,8 +63,8 @@ tar xzf ubuntu-jammy-minimal-arm64-images.tgz
 ./mk-sd-image.sh debian-bullseye-desktop-arm64
 ./mk-emmc-image.sh debian-bullseye-desktop-arm64
 
-./mk-sd-image.sh debian-bullseye-core-arm64
-./mk-emmc-image.sh debian-bullseye-core-arm64
+./mk-sd-image.sh debian-bookworm-core-arm64
+./mk-emmc-image.sh debian-bookworm-core-arm64
 
 ./mk-sd-image.sh debian-bullseye-minimal-arm64
 ./mk-emmc-image.sh debian-bullseye-minimal-arm64
