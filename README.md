@@ -24,7 +24,7 @@ For other kernel versions, please switch to the related git branch.
 
 * debian-bullseye-desktop-arm64
 * debian-bullseye-minimal-arm64
-* debian-bookworm-core-arm64
+* debian-bullseye-core-arm64
 * ubuntu-jammy-desktop-arm64
 * ubuntu-jammy-minimal-arm64
 * ubuntu-jammy-x11-desktop-arm64
@@ -153,7 +153,11 @@ Or build SD-to-eMMC image:
 ```
 ./mk-emmc-image.sh ubuntu-jammy-desktop-arm64
 ```
-
+If the image file is too large to be packaged, you can use an environment variable to reassign the image size, for example:
+```
+RAW_SIZE_MB=16000 ./mk-sd-image.sh ubuntu-jammy-desktop-arm64
+RAW_SIZE_MB=16000 ./mk-emmc-image.sh ubuntu-jammy-desktop-arm64
+```
 ### Compiling the Kernel
 *Note: Here we use ubuntu-jammy-desktop system as an example*  
 Clone this repository locally, then download and uncompress the [pre-built images](http://112.124.9.243/dvdfiles/rk3588/images-for-eflasher):
