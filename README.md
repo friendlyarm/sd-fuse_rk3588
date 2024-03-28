@@ -135,10 +135,15 @@ cd sd-fuse_rk3588-master
 wget http://112.124.9.243/dvdfiles/rk3588/old/kernel-5.10.y/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
 ```
-Unzip the rootfs.tar.gz exported in the previous section, or download the filesystem archive from the following URL and unzip it, the unzip command requires root privileges, so you need put sudo in front of the command:
+Extract the rootfs.tar.gz exported in the previous section, the tar command requires root privileges, so you need put sudo in front of the command:
+```
+mkdir ubuntu-jammy-desktop-arm64/rootfs
+sudo tar xvzfp rootfs.tar.gz -C ubuntu-jammy-desktop-arm64/rootfs --numeric-owner --same-owner
+```
+or download the filesystem archive from the following URL and extract it:
 ```
 wget http://112.124.9.243/dvdfiles/rk3588/rootfs/rootfs-ubuntu-jammy-desktop-arm64.tgz
-sudo tar xzf rootfs-ubuntu-jammy-desktop-arm64.tgz
+sudo tar xvzfp rootfs-ubuntu-jammy-desktop-arm64.tgz --numeric-owner --same-owner
 ```
 Change something:
 ```

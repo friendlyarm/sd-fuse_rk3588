@@ -135,10 +135,15 @@ cd sd-fuse_rk3588-master
 wget http://112.124.9.243/dvdfiles/rk3588/old/kernel-5.10.y/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
 tar xvzf ubuntu-jammy-desktop-arm64-images.tgz
 ```
-解压上一章节导出的rootfs.tar.gz，或者从以下网址下载文件系统压缩包并解压, 需要使用root权限, 因此解压命令需要加上sudo:
+解压上一章节中从开发板上导出的rootfs.tar.gz, 需要使用root权限, 因此解压命令需要加上sudo:
+```
+mkdir ubuntu-jammy-desktop-arm64/rootfs
+sudo tar xvzfp rootfs.tar.gz -C ubuntu-jammy-desktop-arm64/rootfs --numeric-owner --same-owner
+```
+或者从以下网址下载文件系统压缩包并解压:
 ```
 wget http://112.124.9.243/dvdfiles/rk3588/rootfs/rootfs-ubuntu-jammy-desktop-arm64.tgz
-sudo tar xzf rootfs-ubuntu-jammy-desktop-arm64.tgz
+sudo tar xvzfp rootfs-ubuntu-jammy-desktop-arm64.tgz --numeric-owner --same-owner
 ```
 可以根据需要, 对文件系统目录进行更改, 例如:
 ```
