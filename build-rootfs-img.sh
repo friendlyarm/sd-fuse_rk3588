@@ -18,17 +18,31 @@ else
 	IMG_SIZE=0
 fi
 
+# ----------------------------------------------------------
+# Get host machine arch
+HOST_ARCH=
+if uname -mpi | grep aarch64 >/dev/null; then
+    HOST_ARCH="aarch64/"
+fi
+
 TOP=$PWD
 export MKE2FS_CONFIG="${TOP}/tools/mke2fs.conf"
 if [ ! -f ${MKE2FS_CONFIG} ]; then
     echo "error: ${MKE2FS_CONFIG} not found."
     exit 1
 fi
-true ${MKFS:="${TOP}/tools/mke2fs"}
+true ${MKFS:="${TOP}/tools/${HOST_ARCH}mke2fs"}
 
 if [ ! -d ${ROOTFS_DIR} ]; then
     echo "path '${ROOTFS_DIR}' not found."
     exit 1
+fi
+
+# Automatically re-run script under sudo if not root
+if [ $(id -u) -ne 0 ]; then
+        echo "Re-running script under sudo..."
+        sudo --preserve-env "$0" "$@"
+        exit
 fi
 
 MKFS_OPTS="-E android_sparse -t ext4 -L rootfs -M /root -b 4096"

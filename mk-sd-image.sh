@@ -26,6 +26,16 @@ if [ $# -eq 0 ]; then
     usage
 fi
 
+# Automatically re-run script under sudo if not root
+if [ $(id -u) -ne 0 ]; then
+	echo "Re-running script under sudo..."
+	sudo --preserve-env "$0" "$@"
+	exit
+fi
+
+. tools/util.sh
+check_and_install_package
+
 # ----------------------------------------------------------
 # Get platform, target OS
 
@@ -167,6 +177,7 @@ if [ "x${TARGET_OS}" = "xeflasher" ]; then
 	# ----------------------------------------------------------
 	# Setup loop device
 	LOOP_DEVICE=$(losetup -f)
+	sleep 1
 	echo "Using device: ${LOOP_DEVICE}"
 
 	if losetup ${LOOP_DEVICE} ${RAW_FILE}; then
@@ -186,26 +197,16 @@ if [ "x${TARGET_OS}" = "xeflasher" ]; then
 		rm -f ${RAW_FILE}
 		exit 1
 	fi
-
-	if ! command -v mkfs.exfat &> /dev/null; then
-		if [ -f /etc/os-release ]; then
-			. /etc/os-release
-			case "$VERSION_CODENAME" in
-			jammy)
-				sudo apt-get install exfatprogs
-				;;
-			*)
-				sudo apt-get install exfat-fuse exfat-utils
-				;;
-			esac
-		fi
-	fi
-	mkfs.exfat ${LOOP_DEVICE}p1 -n FriendlyARM
+	sudo mkfs.exfat ${LOOP_DEVICE}p1 -n FriendlyARM
 
 	# cleanup
 	losetup -d ${LOOP_DEVICE}
 else
-	true ${SD_UPDATE:=$(dirname $0)/tools/sd_update}
+	HOST_ARCH=
+	if uname -mpi | grep aarch64 >/dev/null; then
+	    HOST_ARCH="aarch64/"
+	fi
+	true ${SD_UPDATE:=$(dirname $0)/tools/${HOST_ARCH}sd_update}
 
 	${SD_UPDATE} -d ${RAW_FILE} -p ${RK_PARAMETER_TXT}
 	if [ $? -ne 0 ]; then

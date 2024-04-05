@@ -31,29 +31,44 @@ if [ ! -d $OUT ]; then
 	exit 1
 fi
 
-true ${UBOOT_SRC:=${OUT}/uboot-${SOC}}
-echo "uboot src: ${UBOOT_SRC}"
-
-# You need to install:
-# apt-get install swig python-dev python3-dev
-
 function usage() {
-       echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bookworm-core-arm64|friendlycore-focal-arm64|openmediavault-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|friendlywrt23|friendlywrt23-docker|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker>"
-       echo "# example:"
-       echo "# clone uboot source from github:"
-       echo "    git clone ${UBOOT_REPO} --depth 1 -b ${UBOOT_BRANCH} ${UBOOT_SRC}"
-       echo "# or clone your local repo:"
-       echo "    git clone git@192.168.1.2:/path/to/uboot.git --depth 1 -b ${UBOOT_BRANCH} ${UBOOT_SRC}"
-       echo "# then"
-       echo "    ./build-uboot.sh debian-buster-desktop-arm64 "
-       echo "    ./mk-emmc-image.sh debian-buster-desktop-arm64 "
-       echo "# also can do:"
-       echo "	UBOOT_SRC=~/myuboot ./build-uboot.sh debian-buster-desktop-arm64"
-       exit 0
+    echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bookworm-core-arm64|friendlycore-focal-arm64|openmediavault-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|friendlywrt23|friendlywrt23-docker|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker>"
+    echo "# example:"
+    echo "# clone uboot source from github:"
+    echo "    git clone ${UBOOT_REPO} --depth 1 -b ${UBOOT_BRANCH} ${UBOOT_SRC}"
+    echo "# or clone your local repo:"
+    echo "    git clone git@192.168.1.2:/path/to/uboot.git --depth 1 -b ${UBOOT_BRANCH} ${UBOOT_SRC}"
+    echo "# then"
+    echo "    ./build-uboot.sh debian-buster-desktop-arm64 "
+    echo "    ./mk-emmc-image.sh debian-buster-desktop-arm64 "
+    echo "# also can do:"
+    echo "	UBOOT_SRC=~/myuboot ./build-uboot.sh debian-buster-desktop-arm64"
+    exit 0
 }
 
 if [ $# -ne 1 ]; then
     usage
+fi
+
+true ${UBOOT_SRC:=${OUT}/uboot-${SOC}}
+echo "uboot src: ${UBOOT_SRC}"
+
+. ${TOPPATH}/tools/util.sh
+check_and_install_toolchain
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+check_and_install_package
+if ! [ -x "$(command -v python2)" ]; then
+    sudo apt install python2
+fi
+if ! [ -x "$(command -v python)" ]; then
+    (cd /usr/bin/ && sudo ln -s python2 python)
+fi
+# get include path for this python version
+INCLUDE_PY=$(python -c "from distutils import sysconfig as s; print s.get_config_vars()['INCLUDEPY']")
+if [ ! -f "${INCLUDE_PY}/Python.h" ]; then
+    sudo apt install python2-dev
 fi
 
 # ----------------------------------------------------------
@@ -109,31 +124,6 @@ if [ ! -d ${UBOOT_SRC}/../rkbin ]; then
         git clone https://github.com/friendlyarm/rkbin -b nanopi6
     })
 fi
-
-if [ ! -d /opt/FriendlyARM/toolchain/11.3-aarch64 ]; then
-	echo "please install aarch64-gcc-11.3 first, using these commands: "
-	echo "    git clone https://github.com/friendlyarm/prebuilts.git -b master --depth 1"
-	echo "    cd prebuilts/gcc-x64"
-	echo "    sudo tar xvf toolchain-11.3-aarch64.tar.xz -C /"
-	exit 1
-fi
-
-export PATH=/opt/FriendlyARM/toolchain/11.3-aarch64/bin/:$PATH
-
-if ! [ -x "$(command -v simg2img)" ]; then
-    sudo apt install android-tools-fsutils
-    # 20.04: sudo apt-get install android-sdk-libsparse-utils android-sdk-ext4-utils
-fi
-
-if ! [ -x "$(command -v swig)" ]; then
-    sudo apt install swig
-fi
-
-# get include path for this python version
-# INCLUDE_PY=$(python -c "from distutils import sysconfig as s; print s.get_config_vars()['INCLUDEPY']")
-# if [ ! -f "${INCLUDE_PY}/Python.h" ]; then
-#     sudo apt install python-dev python3-dev
-# fi  
 
 cd ${UBOOT_SRC}
 make distclean

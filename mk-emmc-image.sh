@@ -31,6 +31,16 @@ if [ $# -eq 0 ]; then
     usage
 fi
 
+. tools/util.sh
+check_and_install_package
+
+# Automatically re-run script under sudo if not root
+if [ $(id -u) -ne 0 ]; then
+        echo "Re-running script under sudo..."
+        sudo --preserve-env "$0" "$@"
+        exit
+fi
+
 # ----------------------------------------------------------
 # Get platform, target OS
 
@@ -81,13 +91,6 @@ EOF
 download_img ${TARGET_OS}
 download_img eflasher
 
-# Automatically re-run script under sudo if not root
-if [ $(id -u) -ne 0 ]; then
-	echo "Re-running script under sudo..."
-	sudo --preserve-env "$0" "$@"
-	exit
-fi
-
 true ${RAW_SIZE_MB:=0}
 RAW_SIZE_MB=${RAW_SIZE_MB} ./mk-sd-image.sh eflasher && \
 	./tools/fill_img_to_eflasher out/${SOC}-eflasher-$(date +%Y%m%d).img ${SOC} $@ && {
@@ -95,6 +98,6 @@ RAW_SIZE_MB=${RAW_SIZE_MB} ./mk-sd-image.sh eflasher && \
 		mkdir -p out/images-for-eflasher
 		tar czf out/images-for-eflasher/${TARGET_OS}-images.tgz ${TARGET_OS}
 		echo "all done."
-	}
+}
 
 
