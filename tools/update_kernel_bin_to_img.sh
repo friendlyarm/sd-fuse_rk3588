@@ -14,16 +14,20 @@ if [ $(id -u) -ne 0 ]; then
 fi
 
 TOP=$PWD
+HOST_ARCH=
+if uname -mpi | grep aarch64 >/dev/null; then
+    HOST_ARCH="aarch64/"
+fi
+
 export MKE2FS_CONFIG="${TOP}/tools/mke2fs.conf"
 if [ ! -f ${MKE2FS_CONFIG} ]; then
     echo "error: ${MKE2FS_CONFIG} not found."
     exit 1
 fi
-true ${MKFS:="${TOP}/tools/mke2fs"}
+true ${MKFS:="${TOP}/tools/${HOST_ARCH}mke2fs"}
 
 true ${SOC:=rk3588}
 ARCH=arm64
-KCFG=nanopi5_linux_defconfig
 KIMG=kernel.img
 KDTB=resource.img
 CROSS_COMPILE=aarch64-linux-gnu-
@@ -34,7 +38,7 @@ if [ $# -ne 4 ]; then
 fi
 OUT=$1
 KERNEL_BUILD_DIR=$2
-TARGET_OS=$3
+TARGET_OS=$(echo ${3,,}|sed 's/\///g')
 PREBUILT=$4
 KMODULES_OUTDIR="${OUT}/output_${SOC}_kmodules"
 
@@ -60,9 +64,6 @@ if [ -f ${TARGET_OS}/rootfs.img ]; then
     umount ${OUT}/rootfs_mnt
     rm -rf ${OUT}/rootfs_mnt
     rm -f ${TARGET_OS}/r.img
-
-    # Processing rootfs_new
-    # Here s5pxx18 is different from h3/h5
 	
     [ -d ${KMODULES_OUTDIR}/lib/firmware ] && cp -af ${KMODULES_OUTDIR}/lib/firmware/* ${OUT}/rootfs_new/lib/firmware/
     rm -rf ${OUT}/rootfs_new/lib/modules/*
@@ -115,5 +116,3 @@ else
     echo "not found ${TARGET_OS}/rootfs.img"
     exit 1
 fi
-
-

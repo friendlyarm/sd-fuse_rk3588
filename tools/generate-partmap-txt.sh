@@ -27,7 +27,7 @@ set -eu
 
 
 IMG_SIZE=$1
-TARGET_OS=$2
+TARGET_OS=$(echo ${2,,}|sed 's/\///g')
 
 TOP=$PWD
 

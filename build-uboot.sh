@@ -30,12 +30,8 @@ if [ ! -d $OUT ]; then
 	echo "path not found: $OUT"
 	exit 1
 fi
-
-true ${UBOOT_SRC:=${OUT}/uboot-${SOC}}
-echo "uboot src: ${UBOOT_SRC}"
-
-# You need to install:
-# apt-get install swig python-dev python3-dev
+true ${uboot_src:=${OUT}/uboot-${SOC}}
+true ${UBOOT_SRC:=${uboot_src}}
 
 function usage() {
        echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bullseye-core-arm64|friendlycore-focal-arm64|openmediavault-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker>"
@@ -56,16 +52,43 @@ if [ $# -ne 1 ]; then
     usage
 fi
 
+case "$(uname -mpi)" in
+x86_64*)
+    ;;
+*)
+    echo "Error: u-boot cross compilation only support on a x86_64 host."
+    exit 1
+    ;;
+esac
+
+. ${TOPPATH}/tools/util.sh
+check_and_install_toolchain
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+check_and_install_package
+if ! [ -x "$(command -v python2)" ]; then
+    sudo apt install python2
+fi
+if ! [ -x "$(command -v python)" ]; then
+    (cd /usr/bin/ && sudo ln -s python2 python)
+fi
+# get include path for this python version
+INCLUDE_PY=$(python -c "from distutils import sysconfig as s; print s.get_config_vars()['INCLUDEPY']")
+if [ ! -f "${INCLUDE_PY}/Python.h" ]; then
+    sudo apt install python2-dev
+fi
+
 # ----------------------------------------------------------
 # Get target OS
-true ${TARGET_OS:=${1,,}}
+true ${TARGET_OS:=$(echo ${1,,}|sed 's/\///g')}
 
 case ${TARGET_OS} in
 buildroot* | friendlycore-focal-arm64 | openmediavault-* | debian-* | ubuntu-* | friendlywrt* | eflasher )
     ;;
 *)
-        echo "Error: Unsupported target OS: ${TARGET_OS}"
-        exit 0
+    echo "Error: Unsupported target OS: ${TARGET_OS}"
+    exit 0
 esac
 
 download_img() {
@@ -109,31 +132,6 @@ if [ ! -d ${UBOOT_SRC}/../rkbin ]; then
         git clone https://github.com/friendlyarm/rkbin -b nanopi6
     })
 fi
-
-if [ ! -d /opt/FriendlyARM/toolchain/11.3-aarch64 ]; then
-	echo "please install aarch64-gcc-11.3 first, using these commands: "
-	echo "    git clone https://github.com/friendlyarm/prebuilts.git -b master --depth 1"
-	echo "    cd prebuilts/gcc-x64"
-	echo "    sudo tar xvf toolchain-11.3-aarch64.tar.xz -C /"
-	exit 1
-fi
-
-export PATH=/opt/FriendlyARM/toolchain/11.3-aarch64/bin/:$PATH
-
-if ! [ -x "$(command -v simg2img)" ]; then
-    sudo apt install android-tools-fsutils
-    # 20.04: sudo apt-get install android-sdk-libsparse-utils android-sdk-ext4-utils
-fi
-
-if ! [ -x "$(command -v swig)" ]; then
-    sudo apt install swig
-fi
-
-# get include path for this python version
-# INCLUDE_PY=$(python -c "from distutils import sysconfig as s; print s.get_config_vars()['INCLUDEPY']")
-# if [ ! -f "${INCLUDE_PY}/Python.h" ]; then
-#     sudo apt install python-dev python3-dev
-# fi  
 
 cd ${UBOOT_SRC}
 make distclean
