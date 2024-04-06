@@ -26,13 +26,6 @@ if [ $# -eq 0 ]; then
     usage
 fi
 
-# Automatically re-run script under sudo if not root
-if [ $(id -u) -ne 0 ]; then
-	echo "Re-running script under sudo..."
-	sudo --preserve-env "$0" "$@"
-	exit
-fi
-
 . tools/util.sh
 check_and_install_package
 
@@ -40,7 +33,7 @@ check_and_install_package
 # Get platform, target OS
 
 true ${SOC:=rk3588}
-true ${TARGET_OS:=${1,,}}
+true ${TARGET_OS:=$(echo ${1,,}|sed 's/\///g')}
 
 # ----------------------------------------------------------
 # Create zero file
@@ -74,7 +67,7 @@ if [ $# -eq 2 ]; then
 	RAW_FILE=$2
 else
 	case ${TARGET_OS} in
-	buildroot*|friendlycore-*|openmediavault-*|debian-*|ubuntu-*)
+	buildroot*|friendlycore-*|openmediavault-*|debian-*|ubuntu-*|android*)
 		RAW_FILE=${SOC}-sd-${TARGET_OS%-*}-6.1-arm64-$(date +%Y%m%d).img
 		;;
 	friendlywrt23)
@@ -177,8 +170,15 @@ if [ "x${TARGET_OS}" = "xeflasher" ]; then
 	# ----------------------------------------------------------
 	# Setup loop device
 	LOOP_DEVICE=$(losetup -f)
-	sleep 1
 	echo "Using device: ${LOOP_DEVICE}"
+	for i in `seq 3`; do
+		if [ -b ${LOOP_DEVICE} ]; then
+			break
+		else
+			echo "Waitting ${LOOP_DEVICE}"
+			sleep 1
+		fi
+	done
 
 	if losetup ${LOOP_DEVICE} ${RAW_FILE}; then
 		USE_KPARTX=1
@@ -219,4 +219,3 @@ echo "---------------------------------"
 echo "RAW image successfully created (`date +%T`)."
 ls -l ${RAW_FILE}
 echo "Tip: You can compress it to save disk space."
-

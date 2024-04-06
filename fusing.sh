@@ -150,4 +150,3 @@ partprobe /dev/${DEV_NAME} -s 2>/dev/null
 
 echo "---------------------------------"
 echo "All done."
-

@@ -30,6 +30,8 @@ if [ ! -d $OUT ]; then
 	echo "path not found: $OUT"
 	exit 1
 fi
+true ${uboot_src:=${OUT}/uboot-${SOC}}
+true ${UBOOT_SRC:=${uboot_src}}
 
 function usage() {
     echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bookworm-core-arm64|friendlycore-focal-arm64|openmediavault-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|friendlywrt23|friendlywrt23-docker|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker>"
@@ -50,8 +52,14 @@ if [ $# -ne 1 ]; then
     usage
 fi
 
-true ${UBOOT_SRC:=${OUT}/uboot-${SOC}}
-echo "uboot src: ${UBOOT_SRC}"
+case "$(uname -mpi)" in
+x86_64*)
+    ;;
+*)
+    echo "Error: u-boot cross compilation only support on a x86_64 host."
+    exit 1
+    ;;
+esac
 
 . ${TOPPATH}/tools/util.sh
 check_and_install_toolchain
@@ -73,14 +81,14 @@ fi
 
 # ----------------------------------------------------------
 # Get target OS
-true ${TARGET_OS:=${1,,}}
+true ${TARGET_OS:=$(echo ${1,,}|sed 's/\///g')}
 
 case ${TARGET_OS} in
 buildroot* | friendlycore-focal-arm64 | openmediavault-* | debian-* | ubuntu-* | friendlywrt* | eflasher )
     ;;
 *)
-        echo "Error: Unsupported target OS: ${TARGET_OS}"
-        exit 0
+    echo "Error: Unsupported target OS: ${TARGET_OS}"
+    exit 0
 esac
 
 download_img() {

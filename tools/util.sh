@@ -76,6 +76,9 @@ function check_and_install_package() {
 	if ! command -v sfdisk &>/dev/null; then
 		PACKAGES="fdisk ${PACKAGES}"
 	fi
+	if ! command -v resize2fs &>/dev/null; then
+		PACKAGES="e2fsprogs ${PACKAGES}"
+	fi
 	if [ ! -z "${PACKAGES}" ]; then
 		sudo apt install ${PACKAGES}
 	fi
@@ -95,15 +98,16 @@ function check_and_install_toolchain() {
 		return 0
 		;;
 	aarch64*)
-		local MISS=0
-		commands=("g++" "gcc" "make" "dtc" "bc" "cpio")
-		for i in ${commands[@]}; do
-			if ! command -v $i &>/dev/null; then
-				MISS=1
+		local PACKAGES=
+		local requirements=("build-essential" "make" "device-tree-compiler" "bc" "cpio" "lz4" \
+			"flex" "bison" "libncurses-dev" "libssl-dev" "libelf-dev")
+		for pkg in ${requirements[@]}; do
+			if ! dpkg -s $pkg > /dev/null 2>&1; then
+				PACKAGES="$pkg ${PACKAGES}"
 			fi
 		done
-		if [ $MISS -eq 1 ]; then
-			sudo apt install build-essential device-tree-compiler bc cpio lz4
+		if [ ! -z "${PACKAGES}" ]; then
+			sudo apt install ${PACKAGES}
 		fi
 		return 0
 		;;

@@ -10,7 +10,7 @@ if [ $# -lt 2 ]; then
 fi
 
 ROOTFS_DIR=$1
-TARGET_OS=$2
+TARGET_OS=$(echo ${2,,}|sed 's/\///g')
 IMG_FILE=$TARGET_OS/rootfs.img
 if [ $# -eq 3 ]; then
 	IMG_SIZE=$3
@@ -40,9 +40,9 @@ fi
 
 # Automatically re-run script under sudo if not root
 if [ $(id -u) -ne 0 ]; then
-        echo "Re-running script under sudo..."
-        sudo --preserve-env "$0" "$@"
-        exit
+    echo "Re-running script under sudo..."
+    sudo --preserve-env "$0" "$@"
+    exit
 fi
 
 MKFS_OPTS="-E android_sparse -t ext4 -L rootfs -M /root -b 4096"
@@ -127,5 +127,3 @@ fi
 
 echo "generating ${IMG_FILE} done."
 echo 0
-
-

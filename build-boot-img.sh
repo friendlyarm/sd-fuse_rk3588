@@ -7,7 +7,7 @@ if [ $# -lt 2 ]; then
     echo "    ./build-boot-img.sh debian-buster-desktop-arm64/boot debian-buster-desktop-arm64/boot.img"
     exit 1
 fi
-TOPDIR=$PWD
+TOPPATH=$PWD
 
 BOOT_DIR=$1
 IMG_FILE=$2
@@ -45,4 +45,3 @@ else
     echo "failed to generate ${IMG_FILE}."
 fi
 exit $RET
-

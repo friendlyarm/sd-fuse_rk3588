@@ -27,13 +27,7 @@ true ${KERNEL_LOGO:=}
 true ${MK_HEADERS_DEB:=0}
 true ${BUILD_THIRD_PARTY_DRIVER:=1}
 true ${KCFG:=nanopi6_linux_defconfig}
-
-. tools/util.sh
-check_and_install_toolchain
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-check_and_install_package
+true ${TARGET_OS:=$(echo ${1,,}|sed 's/\///g')}
 
 KERNEL_REPO=https://github.com/friendlyarm/kernel-rockchip
 KERNEL_BRANCH=nanopi6-v6.1.y
@@ -117,7 +111,8 @@ if [ ! -d $OUT ]; then
 	exit 1
 fi
 KMODULES_OUTDIR="${OUT}/output_${SOC}_kmodules"
-true ${KERNEL_SRC:=${OUT}/kernel-${SOC}}
+true ${kernel_src:=${OUT}/kernel-${SOC}}
+true ${KERNEL_SRC:=${kernel_src}}
 
 function usage() {
        echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bookworm-core-arm64|friendlycore-focal-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|openmediavault-arm64|friendlywrt23|friendlywrt23-docker|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker|eflasher>"
@@ -149,10 +144,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 check_and_install_package
-
-# ----------------------------------------------------------
-# Get target OS
-true ${TARGET_OS:=${1,,}}
 
 
 case ${TARGET_OS} in
@@ -364,7 +355,7 @@ fi
 
 cd ${TOPPATH}
 download_img ${TARGET_OS}
-KCFG=${KCFG} ./tools/update_kernel_bin_to_img.sh ${OUT} ${KERNEL_SRC} ${TARGET_OS} ${TOPPATH}/prebuilt
+./tools/update_kernel_bin_to_img.sh ${OUT} ${KERNEL_SRC} ${TARGET_OS} ${TOPPATH}/prebuilt
 
 if [ $? -eq 0 ]; then
     echo "updating kernel ok."
