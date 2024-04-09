@@ -28,4 +28,5 @@ else
 	git clone ${KERNEL_URL} --depth 1 -b ${KERNEL_BRANCH} kernel-rk3588
 fi
 
-MK_HEADERS_DEB=1 BUILD_THIRD_PARTY_DRIVER=0 KERNEL_SRC=$PWD/kernel-rk3588 ./build-kernel.sh debian-bullseye-desktop-arm64
+BUILD_THIRD_PARTY_DRIVER=0 KERNEL_SRC=$PWD/kernel-rk3588 ./build-kernel.sh debian-bullseye-desktop-arm64
+sudo ./mk-sd-image.sh debian-bullseye-desktop-arm64
