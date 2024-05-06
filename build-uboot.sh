@@ -27,8 +27,8 @@ UBOOT_BRANCH=nanopi6-v2017.09
 TOPPATH=$PWD
 OUT=$TOPPATH/out
 if [ ! -d $OUT ]; then
-	echo "path not found: $OUT"
-	exit 1
+    echo "path not found: $OUT"
+    exit 1
 fi
 true ${uboot_src:=${OUT}/uboot-${SOC}}
 true ${UBOOT_SRC:=${uboot_src}}
@@ -44,7 +44,7 @@ function usage() {
     echo "    ./build-uboot.sh debian-buster-desktop-arm64 "
     echo "    ./mk-emmc-image.sh debian-buster-desktop-arm64 "
     echo "# also can do:"
-    echo "	UBOOT_SRC=~/myuboot ./build-uboot.sh debian-buster-desktop-arm64"
+    echo "    UBOOT_SRC=~/myuboot ./build-uboot.sh debian-buster-desktop-arm64"
     exit 0
 }
 
@@ -67,12 +67,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 check_and_install_package
-if ! [ -x "$(command -v python2)" ]; then
-    sudo apt install python2
-fi
-if ! [ -x "$(command -v python)" ]; then
-    (cd /usr/bin/ && sudo ln -s python2 python)
-fi
+
 # get include path for this python version
 INCLUDE_PY=$(python -c "from distutils import sysconfig as s; print s.get_config_vars()['INCLUDEPY']")
 if [ ! -f "${INCLUDE_PY}/Python.h" ]; then
@@ -96,7 +91,7 @@ download_img() {
     if [ -f "${RKPARAM}" ]; then
         echo ""
     else
-	ROMFILE=`./tools/get_pkg_filename.sh ${1}`
+    ROMFILE=`./tools/get_pkg_filename.sh ${1}`
         cat << EOF
 Warn: Image not found for ${1}
 ----------------
@@ -125,7 +120,7 @@ EOF
 }
 
 if [ ! -d ${UBOOT_SRC} ]; then
-	git clone ${UBOOT_REPO} --depth 1 -b ${UBOOT_BRANCH} ${UBOOT_SRC}
+    git clone ${UBOOT_REPO} --depth 1 -b ${UBOOT_BRANCH} ${UBOOT_SRC}
 fi
 if [ ! -d ${UBOOT_SRC}/../rkbin ]; then
     (cd ${UBOOT_SRC}/../ && {
@@ -138,8 +133,8 @@ make distclean
 ./make.sh nanopi6
 
 if [ $? -ne 0 ]; then
-	echo "failed to build uboot."
-	exit 1
+    echo "failed to build uboot."
+    exit 1
 fi
 
 if [ x"$DISABLE_MKIMG" = x"1" ]; then
