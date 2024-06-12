@@ -111,24 +111,22 @@ if [ ! -d $OUT ]; then
 	exit 1
 fi
 KMODULES_OUTDIR="${OUT}/output_${SOC}_kmodules"
-true ${kernel_src:=${OUT}/kernel-${SOC}}
-true ${KERNEL_SRC:=${kernel_src}}
+true ${kernel_src:=out/kernel-${SOC}}
+true ${KERNEL_SRC:=$(readlink -f ${kernel_src})}
 
 function usage() {
        echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bookworm-core-arm64|friendlycore-focal-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|openmediavault-arm64|friendlywrt23|friendlywrt23-docker|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker|eflasher>"
        echo "# example:"
        echo "# clone kernel source from github:"
-       echo "    git clone ${KERNEL_REPO} --depth 1 -b ${KERNEL_BRANCH} ${KERNEL_SRC}"
-       echo "# or clone your local repo:"
-       echo "    git clone git@192.168.1.2:/path/to/linux.git --depth 1 -b ${KERNEL_BRANCH} ${KERNEL_SRC}"
-       echo "# then"
+       echo "    git clone ${KERNEL_REPO} --depth 1 -b ${KERNEL_BRANCH} ${kernel_src}"
+       echo "# custom kernel logo:"
        echo "    convert files/logo.jpg -type truecolor /tmp/logo.bmp"
        echo "    convert files/logo.jpg -type truecolor /tmp/logo_kernel.bmp"
        echo "    LOGO=/tmp/logo.bmp KERNEL_LOGO=/tmp/logo_kernel.bmp ./build-kernel.sh eflasher"
        echo "    LOGO=/tmp/logo.bmp KERNEL_LOGO=/tmp/logo_kernel.bmp ./build-kernel.sh debian-buster-desktop-arm64"
        echo "    ./mk-emmc-image.sh debian-buster-desktop-arm64"
-       echo "# also can do:"
-       echo "    KERNEL_SRC=\$PWD/kernel ./build-kernel.sh debian-buster-desktop-arm64"
+       echo "# specify the local source:"
+       echo "    KERNEL_SRC=/path/to/kernel ./build-kernel.sh debian-buster-desktop-arm64"
        echo "# build kernel-headers, enable/disable 3rd drivers:"
        echo "    MK_HEADERS_DEB=1 BUILD_THIRD_PARTY_DRIVER=0 ./build-kernel.sh debian-buster-desktop-arm64"
        exit 0
@@ -191,6 +189,7 @@ if [ ! -d ${KERNEL_SRC} ]; then
 	git clone ${KERNEL_REPO} --depth 1 -b ${KERNEL_BRANCH} ${KERNEL_SRC}
 fi
 
+echo "kernel src: ${KERNEL_SRC}"
 if [ -f "${LOGO}" ]; then
 	cp -f ${LOGO} ${KERNEL_SRC}/logo.bmp
 	echo "using ${LOGO} as logo."
@@ -207,7 +206,7 @@ fi
 
 function build_kernel() {
     cd ${KERNEL_SRC}
-    [ -d .git ] && git clean -dxf
+    make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} distclean
     touch .scmversion
     make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} ${KCFG}
     if [ $? -ne 0 ]; then
