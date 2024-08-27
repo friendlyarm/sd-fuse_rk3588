@@ -28,7 +28,7 @@ BOARD=rk3588/images-for-eflasher
 TARGET_OS=$(echo ${1,,}|sed 's/\///g')
 ROMFILE=`./tools/get_pkg_filename.sh ${TARGET_OS}`
 if [ -z ${ROMFILE} ]; then
-	echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bookworm-core-arm64|friendlycore-focal-arm64|openmediavault-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|friendlywrt23|friendlywrt23-docker|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker|eflasher>"
+	echo "Usage: $0 <img dir>"
 	exit 1
 fi
 

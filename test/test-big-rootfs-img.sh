@@ -15,6 +15,7 @@ git clone ../../.git sd-fuse_rk3588
 cd sd-fuse_rk3588
 wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/ubuntu-focal-desktop-arm64-images.tgz
 tar xzf ubuntu-focal-desktop-arm64-images.tgz
+
 wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/emmc-flasher-images.tgz
 tar xzf emmc-flasher-images.tgz
 

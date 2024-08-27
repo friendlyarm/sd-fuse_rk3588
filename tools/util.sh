@@ -79,6 +79,9 @@ function check_and_install_package() {
 	if ! command -v resize2fs &>/dev/null; then
 		PACKAGES="e2fsprogs ${PACKAGES}"
 	fi
+	if ! command -v mkfs.btrfs &>/dev/null; then
+		PACKAGES="btrfs-progs ${PACKAGES}"
+	fi
 	if [ ! -z "${PACKAGES}" ]; then
 		sudo apt install ${PACKAGES}
 	fi
@@ -95,31 +98,6 @@ function check_and_install_toolchain() {
 	done
 	if [ ! -z "${PACKAGES}" ]; then
 		sudo apt install ${PACKAGES}
-	fi
-
-	if ! [ -x "$(command -v python2)" ]; then
-	    if [ -f /etc/os-release ]; then
-		. /etc/os-release
-		case "$VERSION_CODENAME" in
-		noble)
-		    (cd out && {
-			wget https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
-			tar xzf Python-2.7.9.tgz
-			cd Python-2.7.9
-			./configure
-			make -j$(nproc)
-			sudo make install
-			sudo ln -sfn '/usr/local/bin/python2.7' '/usr/bin/python2'
-		    })
-		    ;;
-		*)
-		    sudo apt install python2
-		    ;;
-		esac
-	    fi
-	fi
-	if ! [ -x "$(command -v python)" ]; then
-	    (cd /usr/bin/ && sudo ln -s python2 python)
 	fi
 
 	case "$(uname -mpi)" in

@@ -19,20 +19,9 @@ wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/emmc-f
 tar xzf emmc-flasher-images.tgz
 wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/rootfs/rootfs-ubuntu-jammy-minimal-arm64.tgz
 
-TEMPSCRIPT=`mktemp script.XXXXXX`
-cat << 'EOL' > $PWD/$TEMPSCRIPT
-#!/bin/bash
-tar xzf rootfs-ubuntu-jammy-minimal-arm64.tgz --numeric-owner --same-owner
-echo hello > ubuntu-jammy-minimal-arm64/rootfs/root/welcome.txt
-./build-rootfs-img.sh ubuntu-jammy-minimal-arm64/rootfs ubuntu-jammy-minimal-arm64
-EOL
-chmod 755 $PWD/$TEMPSCRIPT
-if [ $(id -u) -ne 0 ]; then
-    ./tools/fakeroot-ng $PWD/$TEMPSCRIPT
-else
-    $PWD/$TEMPSCRIPT
-fi
-rm $PWD/$TEMPSCRIPT
+sudo tar xzfp rootfs-ubuntu-jammy-minimal-arm64.tgz --numeric-owner --same-owner
+echo hello > ubuntu-jammy-minimal-arm64/rootfs/home/pi/welcome.txt
+sudo ./build-rootfs-img.sh ubuntu-jammy-minimal-arm64/rootfs ubuntu-jammy-minimal-arm64
 
 ./mk-sd-image.sh ubuntu-jammy-minimal-arm64
 ./mk-emmc-image.sh ubuntu-jammy-minimal-arm64

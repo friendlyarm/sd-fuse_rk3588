@@ -23,6 +23,7 @@ true ${DISABLE_MKIMG:=0}
 
 UBOOT_REPO=https://github.com/friendlyarm/uboot-rockchip
 UBOOT_BRANCH=nanopi6-v2017.09
+BOARD=nanopi6
 
 TOPPATH=$PWD
 OUT=$TOPPATH/out
@@ -34,7 +35,7 @@ true ${uboot_src:=${OUT}/uboot-${SOC}}
 true ${UBOOT_SRC:=${uboot_src}}
 
 function usage() {
-    echo "Usage: $0 <buildroot|debian-buster-desktop-arm64|debian-bullseye-desktop-arm64|debian-bullseye-minimal-arm64|debian-bookworm-core-arm64|friendlycore-focal-arm64|openmediavault-arm64|ubuntu-jammy-desktop-arm64|ubuntu-jammy-minimal-arm64|friendlywrt23|friendlywrt23-docker|friendlywrt22|friendlywrt22-docker|friendlywrt21|friendlywrt21-docker>"
+    echo "Usage: $0 <img dir>"
     echo "# example:"
     echo "# clone uboot source from github:"
     echo "    git clone ${UBOOT_REPO} --depth 1 -b ${UBOOT_BRANCH} ${UBOOT_SRC}"
@@ -124,13 +125,13 @@ if [ ! -d ${UBOOT_SRC} ]; then
 fi
 if [ ! -d ${UBOOT_SRC}/../rkbin ]; then
     (cd ${UBOOT_SRC}/../ && {
-        git clone https://github.com/friendlyarm/rkbin -b nanopi6
+        git clone https://github.com/friendlyarm/rkbin -b ${BOARD}
     })
 fi
 
 cd ${UBOOT_SRC}
 make distclean
-./make.sh nanopi6
+./make.sh ${BOARD}
 
 if [ $? -ne 0 ]; then
     echo "failed to build uboot."
