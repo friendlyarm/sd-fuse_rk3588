@@ -163,10 +163,12 @@ RAW_SIZE_MB=16000 ./mk-emmc-image.sh ubuntu-jammy-desktop-arm64
 ```
 
 #### Using BTRFS as your root filesystem
-First, use the following command to check if your kernel supports the btrfs file system. If not, you can enable support by setting the kernel configuration option “CONFIG_BTRFS_FS=y”:
+First, use the following command to check if your kernel supports the BTRFS file system:
 ```
 cat /proc/filesystems | grep btrfs
 ```
+If not, you can add BTRFS support by add the line CONFIG_BTRFS_FS=y to the .config file, you can refer to the script test/test-btrfs-rootfs.sh for more details.  
+
 The following command will create an SD card image with BTRFS root filesystem:
 ```
 git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1

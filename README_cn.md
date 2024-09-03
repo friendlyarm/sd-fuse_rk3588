@@ -161,10 +161,12 @@ RAW_SIZE_MB=16000 ./mk-emmc-image.sh ubuntu-jammy-desktop-arm64
 ```
 
 #### 使用BTRFS文件系统
-首先使用以下命令检查你所用的内核是否支持btrfs文件系统，如不支持，可通过打开内核配置项"CONFIG_BTRFS_FS=y"增加支持:
+首先使用以下命令检查你所用的内核是否支持btrfs文件系统:
 ```
 cat /proc/filesystems | grep btrfs
 ```
+如不支持，可通过打开内核配置项"CONFIG_BTRFS_FS=y"增加支持，详情可参考示例脚本test/test-btrfs-rootfs.sh。  
+
 以下命令会将文件系统打包成BTRFS格式的rootfs.img并制作SD固件:
 ```
 git clone https://github.com/friendlyarm/sd-fuse_rk3588 -b kernel-6.1.y --single-branch sd-fuse_rk3588-kernel6.1
