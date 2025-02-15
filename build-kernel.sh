@@ -274,14 +274,12 @@ function build_kernel() {
     # build rtw_8822ce wifi driver
     (cd ${OUT} && {
         if [ ! -d rtw88 ]; then
-            git clone https://github.com/friendlyarm/rtw88 -b master --depth 1 rtw88
+            git clone https://github.com/lwfinger/rtw88 -b master --depth 1 rtw88
         fi
         (cd rtw88/ && {
             make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} ${BACKPORT} -C ${KERNEL_SRC} M=$(pwd)
             # Remove rtw88 backport
             rm -rf ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER}/updates/drivers/net/wireless/realtek/rtw88/
-            # Disable rtw88 usb support
-            rm -f rtw_88*u.ko
             cp *.ko ${KMODULES_OUTDIR}/lib/modules/${KERNEL_VER} -afv
         })
     })
