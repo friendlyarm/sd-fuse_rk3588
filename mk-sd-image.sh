@@ -72,6 +72,12 @@ else
 	buildroot*|friendlycore-*|openmediavault-*|debian-*|ubuntu-*|android*)
 		RAW_FILE=${SOC}-sd-${TARGET_OS%-*}-6.1-arm64-$(date +%Y%m%d).img
 		;;
+	friendlywrt24)
+		RAW_FILE=${SOC}-sd-friendlywrt-24.10-arm64-$(date +%Y%m%d).img
+		;;
+	friendlywrt24-docker)
+		RAW_FILE=${SOC}-sd-friendlywrt-24.10-docker-arm64-$(date +%Y%m%d).img
+		;;
 	friendlywrt23)
 		RAW_FILE=${SOC}-sd-friendlywrt-23.05-arm64-$(date +%Y%m%d).img
 		;;

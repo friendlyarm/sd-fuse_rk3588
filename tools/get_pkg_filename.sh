@@ -8,6 +8,10 @@ android12)
         ROMFILE=android-12-images.tgz;;
 androidtv)
         ROMFILE=android-tv-images.tgz;;
+friendlywrt24)
+        ROMFILE=friendlywrt24-images.tgz;;
+friendlywrt24-docker)
+        ROMFILE=friendlywrt24-docker-images.tgz;;
 friendlywrt23)
         ROMFILE=friendlywrt23-images.tgz;;
 friendlywrt23-docker)

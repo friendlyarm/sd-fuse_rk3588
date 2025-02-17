@@ -30,6 +30,8 @@ For other kernel versions, please switch to the related git branch.
 * ubuntu-jammy-minimal-arm64
 * ubuntu-jammy-x11-desktop-arm64
 * ubuntu-focal-desktop-arm64
+* friendlywrt24
+* friendlywrt24-docker
 * friendlywrt23
 * friendlywrt23-docker
 * friendlywrt21
