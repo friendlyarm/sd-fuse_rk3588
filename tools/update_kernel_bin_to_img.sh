@@ -107,8 +107,13 @@ if [ -f ${TARGET_OS}/rootfs.img ]; then
             # disable overlayfs for openmediavault
             cp ${TOP}/prebuilt/parameter-plain.txt ${TOP}/${TARGET_OS}/parameter.txt
             ;;
+        friendlywrt*docker)
+            PARAMETER_TPL="${TOP}/prebuilt/parameter-opt.template" \
+                ${TOP}/tools/generate-partmap-txt.sh ${IMG_SIZE} ${TARGET_OS}
+            ;;
         *)
-            ${TOP}/tools/generate-partmap-txt.sh ${IMG_SIZE} ${TARGET_OS}
+            PARAMETER_TPL="${TOP}/prebuilt/parameter.template" \
+                ${TOP}/tools/generate-partmap-txt.sh ${IMG_SIZE} ${TARGET_OS}
             ;;
         esac
     fi
