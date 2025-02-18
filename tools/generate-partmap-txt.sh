@@ -83,9 +83,9 @@ if grep -q "<OPT_PARTITION_ADDR>" ${PARAMETER_TPL}; then
     fi
     sed -i "s|<USERDATA_PARTITION_ADDR>|${USERDATA_PARTITION_ADDR}|g" ${PARAMETER_TXT}
 
-    # Size of the userdata partition: 1GB
-    SIZE1G=1073741824
-    USERDATA_PARTITION_SIZE=`printf "0x%08x" $((${SIZE1G}/512))`
+    # Size of the userdata partition
+    USERDATA_SIZE=1073741824
+    USERDATA_PARTITION_SIZE=`printf "0x%08x" $((${USERDATA_SIZE}/512))`
     sed -i "s|<USERDATA_PARTITION_SIZE>|${USERDATA_PARTITION_SIZE}|g" ${PARAMETER_TXT}
 
     OPT_PARTITION_ADDR=`printf "0x%08x" $((${USERDATA_PARTITION_ADDR}+${USERDATA_PARTITION_SIZE}))`
