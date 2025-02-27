@@ -54,10 +54,8 @@ if [ $RAW_SIZE_MB -eq 0 ]; then
 		RAW_SIZE_MB=7800 ;;
 	friendlycore-*)
 		RAW_SIZE_MB=7800 ;;
-	friendlywrt*docker)
-		RAW_SIZE_MB=2500 ;;
 	friendlywrt*)
-		RAW_SIZE_MB=1500 ;;
+		RAW_SIZE_MB=3000 ;;
 	eflasher)
 		RAW_SIZE_MB=7800 ;;
 	*)
