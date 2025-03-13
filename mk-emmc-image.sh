@@ -41,7 +41,7 @@ true ${SOC:=rk3588}
 true ${TARGET_OS:=$(echo ${1,,}|sed 's/\///g')}
 
 case ${TARGET_OS} in
-buildroot* | friendlycore-focal-arm64 | openmediavault-* | debian-* | ubuntu-* | friendlywrt* | android*)
+buildroot* | friendlycore-focal-arm64 | openmediavault-* | alpine-linux-* | debian-* | ubuntu-* | friendlywrt* | android*)
         ;;
 *)
         echo "Error: Unsupported target OS: ${TARGET_OS}"

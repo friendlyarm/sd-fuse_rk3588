@@ -80,7 +80,7 @@ fi
 true ${TARGET_OS:=$(echo ${1,,}|sed 's/\///g')}
 
 case ${TARGET_OS} in
-buildroot* | friendlycore-focal-arm64 | openmediavault-* | debian-* | ubuntu-* | friendlywrt* | eflasher )
+buildroot* | friendlycore-focal-arm64 | openmediavault-* | alpine-linux-* | debian-* | ubuntu-* | friendlywrt* | eflasher )
     ;;
 *)
     echo "Error: Unsupported target OS: ${TARGET_OS}"

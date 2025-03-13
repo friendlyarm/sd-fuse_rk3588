@@ -48,6 +48,8 @@ if [ $RAW_SIZE_MB -eq 0 ]; then
 		RAW_SIZE_MB=7800 ;;
 	openmediavault-*)
 		RAW_SIZE_MB=7800 ;;
+	alpine-linux-*)
+		RAW_SIZE_MB=1000 ;;
 	debian-*)
 		RAW_SIZE_MB=7800 ;;
 	ubuntu-*)
@@ -67,7 +69,7 @@ if [ $# -eq 2 ]; then
 	RAW_FILE=$2
 else
 	case ${TARGET_OS} in
-	buildroot*|friendlycore-*|openmediavault-*|debian-*|ubuntu-*|android*)
+	buildroot*|friendlycore-*|openmediavault-*|alpine-linux-*|debian-*|ubuntu-*|android*)
 		RAW_FILE=${SOC}-sd-${TARGET_OS%-*}-6.1-arm64-$(date +%Y%m%d).img
 		;;
 	friendlywrt24)

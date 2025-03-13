@@ -37,6 +37,7 @@ kernel*
 /buildroot
 /lubuntu*
 /openmediavault-*
+/alpine-linux-*
 /*-images.tgz*
 /rootfs-*.tgz
 /*.raw*
