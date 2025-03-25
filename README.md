@@ -36,9 +36,10 @@ For other kernel versions, please switch to the related git branch.
 * friendlywrt23-docker
 * friendlywrt21
 * friendlywrt21-docker
+* proxmox-arm64
 * eflasher
-* openmediavault-arm64
 * alpine-linux-arm64
+* openmediavault-arm64
 
   
 To build an SD card image for ubuntu-jammy-desktop, for example like this:

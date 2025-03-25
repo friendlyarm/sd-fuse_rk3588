@@ -35,9 +35,10 @@ sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的�
 * friendlywrt23-docker
 * friendlywrt21
 * friendlywrt21-docker
+* proxmox-arm64
 * eflasher
-* openmediavault-arm64
 * alpine-linux-arm64
+* openmediavault-arm64
 
   
 这些OS名称是分区镜像文件存放的目录名, 在脚本内亦有严格定义, 所以不能改动, 例如要制作ubuntu-jammy-desktop的SD固件, 可使用如下命令:
