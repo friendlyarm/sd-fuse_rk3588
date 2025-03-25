@@ -91,6 +91,7 @@ out/rk3588-sd-ubuntu-jammy-desktop-6.1-arm64-YYYYMMDD.img
 The following command will create an SD card image with OverlayFS disabled:
 ```
 cp prebuilt/parameter-plain.txt ubuntu-jammy-desktop-arm64/parameter.txt
+cp prebuilt/dtbo-plain.img ubuntu-jammy-desktop-arm64/dtbo.img
 ./mk-sd-image.sh ubuntu-jammy-desktop-arm64
 ```
 The benefits of disabling OverlayFS are as follows:  
