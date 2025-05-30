@@ -27,17 +27,18 @@ kernel*
 
 /mnt
 /vendor
-/ubuntu*
 /friendlywrt*
 /debian*
 /android*
 /friendlycore*
+/ubuntu-*
 /friendlydesktop*
 /eflasher
 /buildroot
 /lubuntu*
 /openmediavault-*
 /alpine-linux-*
+/arch-linux-*
 /*-images.tgz*
 /rootfs-*.tgz
 /*.raw*

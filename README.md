@@ -39,6 +39,7 @@ For other kernel versions, please switch to the related git branch.
 * proxmox-arm64
 * eflasher
 * alpine-linux-arm64
+* arch-linux-arm64
 * openmediavault-arm64
 
   

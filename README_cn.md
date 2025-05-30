@@ -38,6 +38,7 @@ sd-fuse 使用不同的git分支来支持不同的内核版本, 当前支持的�
 * proxmox-arm64
 * eflasher
 * alpine-linux-arm64
+* arch-linux-arm64
 * openmediavault-arm64
 
   

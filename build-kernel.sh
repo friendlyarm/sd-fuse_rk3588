@@ -152,7 +152,7 @@ check_and_install_package
 
 
 case ${TARGET_OS} in
-buildroot* | friendlycore-* | openmediavault-* | alpine-linux-* | debian-* | ubuntu-* | friendlywrt* | eflasher )
+buildroot* | friendlycore-* | openmediavault-* | alpine-linux-* | arch-linux-* | debian-* | ubuntu-* | friendlywrt* | eflasher )
         ;;
 *)
         echo "Error: Unsupported target OS: ${TARGET_OS}"
