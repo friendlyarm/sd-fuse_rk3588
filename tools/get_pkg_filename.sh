@@ -6,6 +6,8 @@ buildroot*)
         ROMFILE=buildroot-images.tgz;;
 android12)
         ROMFILE=android-12-images.tgz;;
+android14)
+        ROMFILE=android-14-images.tgz;;
 androidtv)
         ROMFILE=android-tv-images.tgz;;
 friendlywrt24)
