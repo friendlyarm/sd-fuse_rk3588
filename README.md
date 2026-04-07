@@ -29,10 +29,8 @@ For other kernel versions, please switch to the related git branch.
 * debian-bullseye-minimal-arm64
 * eflasher
 * friendlycore-focal-arm64
-* friendlywrt21
-* friendlywrt21-docker
-* friendlywrt23
-* friendlywrt23-docker
+* friendlywrt25
+* friendlywrt25-docker
 * friendlywrt24
 * friendlywrt24-docker
 * openmediavault-arm64
@@ -44,6 +42,10 @@ For other kernel versions, please switch to the related git branch.
 * ubuntu-jammy-x11-desktop-arm64
 * ubuntu-noble-desktop-arm64
 * ubuntu-noble-minimal-arm64
+* debian-bookworm-lxqt-x11-desktop-arm64
+* debian-bookworm-xfce-x11-desktop-arm64
+* debian-trixie-gnome-wayland-minimal-arm64
+* debian-trixie-gnome-wayland-desktop-arm64
 
   
 To build an SD card image for debian-bullseye-desktop-arm64, for example like this:
