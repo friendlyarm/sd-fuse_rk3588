@@ -2,7 +2,7 @@
 set -eu
 
 # Copyright (C) Guangzhou FriendlyElec Computer Tech. Co., Ltd.
-# (http://www.friendlyelec.com)
+# (https://www.friendlyelec.com)
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,16 +21,15 @@ set -eu
 # ----------------------------------------------------------
 # base setup
 
-# CDN base URL: local MinIO when .use-local-r2 exists at repo root,
-# else production Cloudflare R2 (自定义域 cdn.friendlyelec.com).
 SDFUSE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 if [ -f "${SDFUSE_ROOT}/.use-local-r2" ]; then
     BASE_URL=http://cdn.local/friendlyelec-cdn/os-images
 else
-    BASE_URL=https://cdn.friendlyelec.com/os-images
+    BASE_URL=https://downloads.friendlyelec.com/os-images
 fi
-OPT_URL=http://wiki.friendlyarm.com/download/
-BOARD=rk3588/images
+BOARD=rk3588/images/old/kernel-5.10.y/images-for-eflasher
+EMMC_FLASHER_BOARD=rk3588/images
+OUT_DIR=out
 TARGET_OS=$(echo ${1,,}|sed 's/\///g')
 ROMFILE=`./tools/get_pkg_filename.sh ${TARGET_OS}`
 if [ -z ${ROMFILE} ]; then
@@ -46,26 +45,28 @@ function FA_DoExec() {
 	eval $@
 }
 
+function board_for()
+{
+	case "$1" in
+		emmc-flasher-images.tgz*) echo "${EMMC_FLASHER_BOARD}" ;;
+		*)                        echo "${BOARD}" ;;
+	esac
+}
+
 function download_file()
 {
-	local url=${BASE_URL}/${BOARD}/$1
+	local url=${BASE_URL}/$(board_for "$1")/$1
 
 	if [ -z $1 ]; then
 		echo "Error downloading file: $1"
 		exit 1
 	fi
 
-	if [ -f $1 ]; then
-		rm -fv $1
+	if [ -f ${OUT_DIR}/$1 ]; then
+		rm -fv ${OUT_DIR}/$1
 	fi
 
-	FA_DoExec wget --spider --tries=1 ${url}
-	if [[ "$?" != 0 ]]; then
-		url=${OPT_URL}/${BOARD}/$1
-	fi
-
-	FA_DoExec wget ${url}
-	if [[ "$?" != 0 ]]; then
+	if ! FA_DoExec wget -P ${OUT_DIR} ${url}; then
 		echo "Error downloading file: $1"
 		exit 1
 	fi
@@ -74,28 +75,18 @@ function download_file()
 }
 
 #----------------------------------------------------------
-# download image and verify it
+# download image
 
-download_file ${ROMFILE}.sha256
+mkdir -p ${OUT_DIR}
 
-if [ -f ${ROMFILE} ]; then
-	sha256sum -c ${ROMFILE}.sha256 >/dev/null 2>&1
-	NEED_DL=$?
-else
-	NEED_DL=1
-fi
-
-# skip if main file exist and sha256sum check OK
-if [ ${NEED_DL} -ne 0 ]; then
+if [ ! -f ${OUT_DIR}/${ROMFILE} ]; then
 	download_file ${ROMFILE}
 fi
 
-sha256sum -c ${ROMFILE}.sha256
-if [[ "$?" != 0 ]]; then
+if [ ! -f ${OUT_DIR}/${ROMFILE} ]; then
 	echo "Error in downloaded file, please try again, or download it by"
 	echo "browser or other tools, URL is:"
-	echo "  ${BASE_URL}/${BOARD}/${ROMFILE}"
-	echo "  ${BASE_URL}/${BOARD}/${ROMFILE}.sha256"
+	echo "  ${BASE_URL}/$(board_for "${ROMFILE}")/${ROMFILE}"
 	exit 1
 fi
 
@@ -104,7 +95,7 @@ fi
 
 mkdir -p ${TARGET_OS}
 
-if [ -f ${ROMFILE} ]; then
+if [ -f ${OUT_DIR}/${ROMFILE} ]; then
 	XOPTS="-C ${TARGET_OS} --strip-components=1"
-	FA_DoExec tar xzvf ${ROMFILE} ${XOPTS} || exit 1
+	FA_DoExec tar xzvf ${OUT_DIR}/${ROMFILE} ${XOPTS} || exit 1
 fi

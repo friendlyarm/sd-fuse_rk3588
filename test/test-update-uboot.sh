@@ -1,12 +1,10 @@
 #!/bin/bash
 set -eux
 
-# CDN base URL: local MinIO when .use-local-r2 exists at repo root,
-# else production Cloudflare R2. All images-for-eflasher downloads go here.
 if [ -f "$(dirname "$(readlink -f "$0")")/../.use-local-r2" ]; then
-    CDN_URL=http://cdn.local/friendlyelec-cdn/os-images/rk3588/images
+    CDN_URL=http://cdn.local/friendlyelec-cdn/os-images/rk3588/images/old/kernel-5.10.y/images-for-eflasher
 else
-    CDN_URL=https://cdn.friendlyelec.com/os-images/rk3588/images
+    CDN_URL=https://downloads.friendlyelec.com/os-images/rk3588/images/old/kernel-5.10.y/images-for-eflasher
 fi
 UBOOT_REPO=https://github.com/friendlyarm/uboot-rockchip
 UBOOT_BRANCH=nanopi5-v2017.09
@@ -24,7 +22,7 @@ cd sd-fuse_rk3588
 if [ -f ../../ubuntu-jammy-minimal-arm64-images.tgz ]; then
 	tar xvzf ../../ubuntu-jammy-minimal-arm64-images.tgz
 else
-	wget --no-proxy ${CDN_URL}/ubuntu-jammy-minimal-arm64-images.tgz
+	wget ${CDN_URL}/ubuntu-jammy-minimal-arm64-images.tgz
     tar xvzf ubuntu-jammy-minimal-arm64-images.tgz
 fi
 
