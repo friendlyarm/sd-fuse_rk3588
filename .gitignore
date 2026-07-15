@@ -58,3 +58,4 @@ kernel*
 # cscope files
 cscope.*
 
+.use-local-r2

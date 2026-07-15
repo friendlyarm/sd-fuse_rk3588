@@ -1,7 +1,11 @@
 #!/bin/bash
 set -eu
 
-HTTP_SERVER=112.124.9.243
+if [ -f "$(dirname "$(readlink -f "$0")")/../.use-local-r2" ]; then
+    CDN_URL=http://cdn.local/friendlyelec-cdn/os-images/rk3588/images
+else
+    CDN_URL=https://downloads.friendlyelec.com/os-images/rk3588/images
+fi
 KERNEL_URL=https://github.com/friendlyarm/kernel-rockchip
 KERNEL_BRANCH=nanopi6-v6.1.y
 
@@ -19,14 +23,14 @@ cd sd-fuse_rk3588
 if [ -f ../../ubuntu-noble-desktop-arm64-images.tgz ]; then
 	tar xvzf ../../ubuntu-noble-desktop-arm64-images.tgz
 else
-	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/ubuntu-noble-desktop-arm64-images.tgz
+	wget ${CDN_URL}/ubuntu-noble-desktop-arm64-images.tgz
     tar xvzf ubuntu-noble-desktop-arm64-images.tgz
 fi
 
 if [ -f ../../emmc-flasher-images.tgz ]; then
 	tar xvzf ../../emmc-flasher-images.tgz
 else
-	wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/images-for-eflasher/emmc-flasher-images.tgz
+	wget ${CDN_URL}/emmc-flasher-images.tgz
 	tar xzf emmc-flasher-images.tgz
 fi
 
