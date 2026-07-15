@@ -1,8 +1,13 @@
 #!/bin/bash
 set -eu
 
-HTTP_SERVER=112.124.9.243
-
+# CDN base URL: local MinIO when .use-local-r2 exists at repo root,
+# else production Cloudflare R2. All images-for-eflasher downloads go here.
+if [ -f "$(dirname "$(readlink -f "$0")")/../.use-local-r2" ]; then
+    CDN_URL=http://cdn.local/friendlyelec-cdn/os-images/rk3588/images
+else
+    CDN_URL=https://cdn.friendlyelec.com/os-images/rk3588/images
+fi
 # hack for me
 [ -f /etc/friendlyarm ] && source /etc/friendlyarm $(basename $(builtin cd ..; pwd))
 
@@ -13,11 +18,11 @@ sudo rm -rf tmp/*
 cd tmp
 git clone ../../.git sd-fuse_rk3588
 cd sd-fuse_rk3588
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/ubuntu-jammy-minimal-arm64-images.tgz
+wget --no-proxy ${CDN_URL}/ubuntu-jammy-minimal-arm64-images.tgz
 tar xzf ubuntu-jammy-minimal-arm64-images.tgz
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/emmc-flasher-images.tgz
+wget --no-proxy ${CDN_URL}/emmc-flasher-images.tgz
 tar xzf emmc-flasher-images.tgz
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/rootfs/rootfs-ubuntu-jammy-minimal-arm64.tgz
+wget --no-proxy http://112.124.9.243/dvdfiles/RK3588/rootfs/rootfs-ubuntu-jammy-minimal-arm64.tgz
 
 TEMPSCRIPT=`mktemp script.XXXXXX`
 cat << 'EOL' > $PWD/$TEMPSCRIPT

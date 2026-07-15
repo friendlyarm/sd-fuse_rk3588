@@ -1,8 +1,13 @@
 #!/bin/bash
 set -eu
 
-HTTP_SERVER=112.124.9.243
-
+# CDN base URL: local MinIO when .use-local-r2 exists at repo root,
+# else production Cloudflare R2. All images-for-eflasher downloads go here.
+if [ -f "$(dirname "$(readlink -f "$0")")/../.use-local-r2" ]; then
+    CDN_URL=http://cdn.local/friendlyelec-cdn/os-images/rk3588/images
+else
+    CDN_URL=https://cdn.friendlyelec.com/os-images/rk3588/images
+fi
 # hack for me
 [ -f /etc/friendlyarm ] && source /etc/friendlyarm $(basename $(builtin cd ..; pwd))
 
@@ -15,43 +20,43 @@ git clone ../../.git sd-fuse_rk3588
 cd sd-fuse_rk3588
 
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/friendlycore-focal-arm64-images.tgz
+wget --no-proxy ${CDN_URL}/friendlycore-focal-arm64-images.tgz
 tar xzf friendlycore-focal-arm64-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/openmediavault-arm64-images.tgz
+wget --no-proxy ${CDN_URL}/openmediavault-arm64-images.tgz
 tar xzf openmediavault-arm64-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/friendlywrt22-images.tgz
+wget --no-proxy ${CDN_URL}/friendlywrt22-images.tgz
 tar xzf friendlywrt22-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/friendlywrt22-docker-images.tgz
+wget --no-proxy ${CDN_URL}/friendlywrt22-docker-images.tgz
 tar xzf friendlywrt22-docker-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/friendlywrt21-images.tgz
+wget --no-proxy ${CDN_URL}/friendlywrt21-images.tgz
 tar xzf friendlywrt21-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/friendlywrt21-docker-images.tgz
+wget --no-proxy ${CDN_URL}/friendlywrt21-docker-images.tgz
 tar xzf friendlywrt21-docker-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/emmc-flasher-images.tgz
+wget --no-proxy ${CDN_URL}/emmc-flasher-images.tgz
 tar xzf emmc-flasher-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/debian-buster-desktop-arm64-images.tgz
+wget --no-proxy ${CDN_URL}/debian-buster-desktop-arm64-images.tgz
 tar xzf debian-buster-desktop-arm64-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/debian-bullseye-desktop-arm64-images.tgz
+wget --no-proxy ${CDN_URL}/debian-bullseye-desktop-arm64-images.tgz
 tar xzf debian-bullseye-desktop-arm64-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/debian-bullseye-core-arm64-images.tgz
+wget --no-proxy ${CDN_URL}/debian-bullseye-core-arm64-images.tgz
 tar xzf debian-bullseye-core-arm64-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/debian-bullseye-minimal-arm64-images.tgz
+wget --no-proxy ${CDN_URL}/debian-bullseye-minimal-arm64-images.tgz
 tar xzf debian-bullseye-minimal-arm64-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/ubuntu-jammy-desktop-arm64-images.tgz
+wget --no-proxy ${CDN_URL}/ubuntu-jammy-desktop-arm64-images.tgz
 tar xzf ubuntu-jammy-desktop-arm64-images.tgz
 
-wget --no-proxy http://${HTTP_SERVER}/dvdfiles/RK3588/old/kernel-5.10.y/images-for-eflasher/ubuntu-jammy-minimal-arm64-images.tgz
+wget --no-proxy ${CDN_URL}/ubuntu-jammy-minimal-arm64-images.tgz
 tar xzf ubuntu-jammy-minimal-arm64-images.tgz
 
 ./mk-sd-image.sh debian-buster-desktop-arm64

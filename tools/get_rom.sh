@@ -21,10 +21,16 @@ set -eu
 # ----------------------------------------------------------
 # base setup
 
-BASE_URL=http://112.124.9.243/dvdfiles
+# CDN base URL: local MinIO when .use-local-r2 exists at repo root,
+# else production Cloudflare R2 (自定义域 cdn.friendlyelec.com).
+SDFUSE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [ -f "${SDFUSE_ROOT}/.use-local-r2" ]; then
+    BASE_URL=http://cdn.local/friendlyelec-cdn/os-images
+else
+    BASE_URL=https://cdn.friendlyelec.com/os-images
+fi
 OPT_URL=http://wiki.friendlyarm.com/download/
-BOARD=rk3588/images-for-eflasher
-
+BOARD=rk3588/images
 TARGET_OS=$(echo ${1,,}|sed 's/\///g')
 ROMFILE=`./tools/get_pkg_filename.sh ${TARGET_OS}`
 if [ -z ${ROMFILE} ]; then
@@ -70,26 +76,26 @@ function download_file()
 #----------------------------------------------------------
 # download image and verify it
 
-download_file ${ROMFILE}.hash.md5
+download_file ${ROMFILE}.sha256
 
 if [ -f ${ROMFILE} ]; then
-	md5sum -c ${ROMFILE}.hash.md5 >/dev/null 2>&1
+	sha256sum -c ${ROMFILE}.sha256 >/dev/null 2>&1
 	NEED_DL=$?
 else
 	NEED_DL=1
 fi
 
-# skip if main file exist and md5sum check OK
+# skip if main file exist and sha256sum check OK
 if [ ${NEED_DL} -ne 0 ]; then
 	download_file ${ROMFILE}
 fi
 
-md5sum -c ${ROMFILE}.hash.md5
+sha256sum -c ${ROMFILE}.sha256
 if [[ "$?" != 0 ]]; then
 	echo "Error in downloaded file, please try again, or download it by"
 	echo "browser or other tools, URL is:"
 	echo "  ${BASE_URL}/${BOARD}/${ROMFILE}"
-	echo "  ${BASE_URL}/${BOARD}/${ROMFILE}.hash.md5"
+	echo "  ${BASE_URL}/${BOARD}/${ROMFILE}.sha256"
 	exit 1
 fi
 
